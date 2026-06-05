@@ -36,21 +36,21 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
       title: "Google Ads",
       description: "View and manage your Google Ads information.",
       status: getBlockStatus(client, "google-ads"),
-      route: "/dashboard/google-ads"
+      route: "/dashboard"
     },
     {
       id: "email-marketing",
       title: "Email Marketing",
       description: "Review campaign ideas, audiences, and email drafts.",
       status: getBlockStatus(client, "email"),
-      route: "/dashboard/email"
+      route: "/dashboard"
     },
     {
       id: "free-ai",
       title: "Free AI",
       description: "Generate quick campaign ideas and content angles.",
       status: getBlockStatus(client, "free-ai"),
-      route: "/dashboard/ai-tools"
+      route: "/dashboard"
     }
   ];
 
