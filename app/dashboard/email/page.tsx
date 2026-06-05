@@ -2,22 +2,22 @@
 
 import { AppShell } from "@/components/AppShell";
 import { AuthGuard } from "@/components/AuthGuard";
-import { GoogleAdsReport } from "@/components/GoogleAdsReport";
+import { EmailMarketingReport } from "@/components/EmailMarketingReport";
 import { LOCKED_DASHBOARD_MESSAGE, canOpenDashboardBlock } from "@/lib/access-control";
-import { getGoogleAdsReport } from "@/lib/google-ads-reports";
+import { getEmailMarketingReport } from "@/lib/email-marketing-reports";
 import { usePortalData } from "@/hooks/usePortalData";
 
-export default function GoogleAdsPage() {
+export default function EmailPage() {
   return (
     <AuthGuard allowedRole="client">
       {(user) => (
-        <GoogleAdsDashboard userClientId={user.clientId} userName={user.name} />
+        <EmailMarketingDashboard userClientId={user.clientId} userName={user.name} />
       )}
     </AuthGuard>
   );
 }
 
-function GoogleAdsDashboard({
+function EmailMarketingDashboard({
   userClientId,
   userName
 }: {
@@ -26,9 +26,7 @@ function GoogleAdsDashboard({
 }) {
   const { clients, ready } = usePortalData();
   const client = clients.find((item) => item.id === userClientId);
-  const canOpen = client
-    ? canOpenDashboardBlock(client, "google-ads", true)
-    : false;
+  const canOpen = client ? canOpenDashboardBlock(client, "email", true) : false;
 
   if (!ready) return null;
 
@@ -40,14 +38,14 @@ function GoogleAdsDashboard({
         <div className="empty-state">No client dashboard is assigned to this login.</div>
       ) : !canOpen ? (
         <section className="panel locked-panel">
-          <p className="eyebrow">Google Ads locked</p>
+          <p className="eyebrow">Email Marketing locked</p>
           <h1>{client.companyName}</h1>
           <p className="muted">{LOCKED_DASHBOARD_MESSAGE}</p>
         </section>
       ) : (
-        <GoogleAdsReport
+        <EmailMarketingReport
           companyName={client.companyName}
-          report={getGoogleAdsReport(client)}
+          report={getEmailMarketingReport(client)}
         />
       )}
     </AppShell>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Bot, Mail, Megaphone, Lock } from "lucide-react";
+import { canOpenDashboardBlock } from "@/lib/access-control";
 import type { ClientAccount, MarketingBlock } from "@/lib/types";
 
 type BlockCardProps = {
@@ -9,7 +10,7 @@ type BlockCardProps = {
 };
 
 export function BlockCard({ block, client }: BlockCardProps) {
-  const locked = block.paid && client.paymentStatus === "unpaid";
+  const locked = !canOpenDashboardBlock(client, block.id, block.paid);
   const Icon =
     block.category === "Ads" ? Megaphone : block.category === "Email" ? Mail : Bot;
 

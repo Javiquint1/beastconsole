@@ -1,20 +1,44 @@
 "use client";
 
-import { initialClients } from "./mock-data";
+import { initialDatabase } from "./database-seed";
+import { buildClientAccounts, createDatabaseFromClientAccounts } from "./database";
+import type { PortalDatabase } from "./database-schema";
 import type { BlockId, ClientAccount, SessionUser } from "./types";
 
 const CLIENTS_KEY = "beast-console.clients";
+const DATABASE_KEY = "beast-console.database";
 const SESSION_KEY = "beast-console.session";
 
 export function loadClients(): ClientAccount[] {
+  return buildClientAccounts(loadDatabase());
+}
+
+export function saveClients(clients: ClientAccount[]) {
+  saveDatabase(createDatabaseFromClientAccounts(clients, loadDatabase()));
+  window.localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+}
+
+export function loadDatabase(): PortalDatabase {
   if (typeof window === "undefined") {
-    return initialClients;
+    return initialDatabase;
+  }
+
+  const savedDatabase = window.localStorage.getItem(DATABASE_KEY);
+  if (savedDatabase) {
+    try {
+      const database = JSON.parse(savedDatabase) as PortalDatabase;
+      if (isPortalDatabase(database)) {
+        return database;
+      }
+    } catch {
+      window.localStorage.removeItem(DATABASE_KEY);
+    }
   }
 
   const saved = window.localStorage.getItem(CLIENTS_KEY);
   if (!saved) {
-    window.localStorage.setItem(CLIENTS_KEY, JSON.stringify(initialClients));
-    return initialClients;
+    saveDatabase(initialDatabase);
+    return initialDatabase;
   }
 
   try {
@@ -24,20 +48,24 @@ export function loadClients(): ClientAccount[] {
     const migratedClients = clients.map(migrateClientAccount);
 
     if (!migratedClients.every(isClientAccount)) {
-      window.localStorage.setItem(CLIENTS_KEY, JSON.stringify(initialClients));
-      return initialClients;
+      saveDatabase(initialDatabase);
+      return initialDatabase;
     }
 
     window.localStorage.setItem(CLIENTS_KEY, JSON.stringify(migratedClients));
-    return migratedClients as ClientAccount[];
+    const database = createDatabaseFromClientAccounts(
+      migratedClients as ClientAccount[]
+    );
+    saveDatabase(database);
+    return database;
   } catch {
-    window.localStorage.setItem(CLIENTS_KEY, JSON.stringify(initialClients));
-    return initialClients;
+    saveDatabase(initialDatabase);
+    return initialDatabase;
   }
 }
 
-export function saveClients(clients: ClientAccount[]) {
-  window.localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients));
+export function saveDatabase(database: PortalDatabase) {
+  window.localStorage.setItem(DATABASE_KEY, JSON.stringify(database));
 }
 
 export function loadSession(): SessionUser | null {
@@ -90,4 +118,16 @@ function migrateClientAccount(
 
 function isBlockId(blockId: string): blockId is BlockId {
   return blockId === "google-ads" || blockId === "email" || blockId === "free-ai";
+}
+
+function isPortalDatabase(database: Partial<PortalDatabase>) {
+  return Boolean(
+    Array.isArray(database.users) &&
+      Array.isArray(database.clients) &&
+      Array.isArray(database.client_blocks) &&
+      Array.isArray(database.google_ads_reports) &&
+      Array.isArray(database.email_reports) &&
+      Array.isArray(database.ai_generations) &&
+      Array.isArray(database.payments)
+  );
 }

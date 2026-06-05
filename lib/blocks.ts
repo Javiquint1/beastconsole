@@ -1,4 +1,5 @@
 import type { ClientAccount, DashboardBlock, MarketingBlock } from "./types";
+import { getDashboardBlockStatus } from "./access-control";
 
 export const marketingBlocks: MarketingBlock[] = [
   {
@@ -42,14 +43,14 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
       title: "Email Marketing",
       description: "Review campaign ideas, audiences, and email drafts.",
       status: getBlockStatus(client, "email"),
-      route: "/dashboard/email-marketing"
+      route: "/dashboard/email"
     },
     {
       id: "free-ai",
       title: "Free AI",
       description: "Generate quick campaign ideas and content angles.",
       status: getBlockStatus(client, "free-ai"),
-      route: "/dashboard/free-ai"
+      route: "/dashboard/ai-tools"
     }
   ];
 
@@ -84,5 +85,6 @@ function getBlockStatus(
   client: ClientAccount,
   blockId: MarketingBlock["id"]
 ): DashboardBlock["status"] {
-  return client.enabledBlocks.includes(blockId) ? "active" : "locked";
+  const block = marketingBlocks.find((item) => item.id === blockId);
+  return getDashboardBlockStatus(client, blockId, Boolean(block?.paid));
 }

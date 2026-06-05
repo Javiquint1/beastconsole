@@ -2,22 +2,19 @@
 
 import { AppShell } from "@/components/AppShell";
 import { AuthGuard } from "@/components/AuthGuard";
-import { GoogleAdsReport } from "@/components/GoogleAdsReport";
+import { AiToolsAssistant } from "@/components/AiToolsAssistant";
 import { LOCKED_DASHBOARD_MESSAGE, canOpenDashboardBlock } from "@/lib/access-control";
-import { getGoogleAdsReport } from "@/lib/google-ads-reports";
 import { usePortalData } from "@/hooks/usePortalData";
 
-export default function GoogleAdsPage() {
+export default function AiToolsPage() {
   return (
     <AuthGuard allowedRole="client">
-      {(user) => (
-        <GoogleAdsDashboard userClientId={user.clientId} userName={user.name} />
-      )}
+      {(user) => <AiToolsDashboard userClientId={user.clientId} userName={user.name} />}
     </AuthGuard>
   );
 }
 
-function GoogleAdsDashboard({
+function AiToolsDashboard({
   userClientId,
   userName
 }: {
@@ -26,9 +23,7 @@ function GoogleAdsDashboard({
 }) {
   const { clients, ready } = usePortalData();
   const client = clients.find((item) => item.id === userClientId);
-  const canOpen = client
-    ? canOpenDashboardBlock(client, "google-ads", true)
-    : false;
+  const canOpen = client ? canOpenDashboardBlock(client, "free-ai", false) : false;
 
   if (!ready) return null;
 
@@ -40,15 +35,12 @@ function GoogleAdsDashboard({
         <div className="empty-state">No client dashboard is assigned to this login.</div>
       ) : !canOpen ? (
         <section className="panel locked-panel">
-          <p className="eyebrow">Google Ads locked</p>
+          <p className="eyebrow">Free AI locked</p>
           <h1>{client.companyName}</h1>
           <p className="muted">{LOCKED_DASHBOARD_MESSAGE}</p>
         </section>
       ) : (
-        <GoogleAdsReport
-          companyName={client.companyName}
-          report={getGoogleAdsReport(client)}
-        />
+        <AiToolsAssistant clientId={client.id} defaultBusinessName={client.companyName} />
       )}
     </AppShell>
   );
