@@ -4,12 +4,12 @@ export const workspaceApps: WorkspaceAppDefinition[] = [
   {
     id: "email",
     blockId: "email",
-    title: "Email Marketing App",
-    description: "Build, review, and monitor email campaigns.",
-    paid: true,
+    title: "Email",
+    description: "Connect a mailbox, read messages, and send business email.",
+    paid: false,
     accent: "#ffc400",
     defaultPosition: { x: 32, y: 104 },
-    defaultSize: { width: 760, height: 600 }
+    defaultSize: { width: 900, height: 640 }
   },
   {
     id: "ai-helper",
