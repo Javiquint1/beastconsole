@@ -10,6 +10,13 @@ export const marketingBlocks: MarketingBlock[] = [
     description: "Track spend, conversions, CPA, and next optimization moves."
   },
   {
+    id: "meta-ads",
+    name: "Meta Ads Manager",
+    category: "Ads",
+    paid: true,
+    description: "Review Facebook and Instagram ad performance."
+  },
+  {
     id: "email",
     name: "Email Campaign Builder",
     category: "Email",
@@ -43,6 +50,13 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
       title: "Email Marketing",
       description: "Review campaign ideas, audiences, and email drafts.",
       status: getBlockStatus(client, "email"),
+      route: "/dashboard"
+    },
+    {
+      id: "meta-ads",
+      title: "Meta Ads Manager",
+      description: "View Facebook and Instagram campaign reports.",
+      status: getBlockStatus(client, "meta-ads"),
       route: "/dashboard"
     },
     {

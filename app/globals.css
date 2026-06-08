@@ -624,6 +624,8 @@ h3 {
 
 .smtp-compose{background:#fff;border:1px solid var(--line);bottom:12px;box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;max-width:520px;position:absolute;right:12px;width:calc(100% - 24px);z-index:5}.smtp-compose header,.smtp-compose footer{align-items:center;display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;padding:9px}.smtp-compose header{background:#082342;color:#fff}.smtp-compose header button{background:transparent;border:0;color:#fff;cursor:pointer}.smtp-compose input,.smtp-compose textarea{border:0;border-bottom:1px solid var(--line);border-radius:0;outline:0;width:100%}.spin{animation:email-spin 1s linear infinite}@keyframes email-spin{to{transform:rotate(360deg)}}
 
+.meta-ads-app{background:#f4f6f8;color:var(--ink);gap:12px;min-height:100%;padding:14px}.meta-ads-header{align-items:flex-start;background:#082342;color:#fff;display:flex;justify-content:space-between;padding:14px}.meta-ads-header h2{font-size:1.35rem;margin:3px 0}.meta-ads-header span{color:rgba(255,255,255,.68);font-size:.72rem}.meta-metric-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(115px,1fr))}.meta-campaign-panel{min-width:0}.meta-campaign-table{min-width:1250px}.meta-campaign-table td:first-child{max-width:210px}.meta-campaign-table td:first-child small{color:var(--muted);display:block;margin-top:3px}.meta-bottom-grid{grid-template-columns:1fr 1fr .8fr}.meta-bottom-grid textarea{width:100%}.recommendation-list{display:grid;gap:7px}.recommendation-list .notice{align-items:flex-start;display:flex;gap:6px}.meta-api-card{border-style:dashed}.meta-api-card p{color:var(--muted);line-height:1.5}.meta-api-card button{background:#e8edf2;border:1px solid var(--line);border-radius:5px;color:var(--muted);padding:8px}.meta-upload{cursor:pointer}.meta-upload input{display:none}.meta-campaign-form{background:#fff;border:1px solid var(--line);box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;gap:10px;left:16px;padding:14px;position:absolute;right:16px;top:70px;z-index:8}.meta-campaign-form header{align-items:center;display:flex;justify-content:space-between}.meta-campaign-form header button{background:transparent;border:0;cursor:pointer}.meta-form-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}.meta-form-grid textarea{grid-column:span 2}
+
 .table-wrap.embedded {
   box-shadow: none;
 }
@@ -977,5 +979,16 @@ h3 {
   .smtp-folder-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .meta-metric-grid,
+  .meta-bottom-grid,
+  .meta-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .meta-ads-header {
+    gap: 10px;
+    flex-direction: column;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, Mail, Megaphone } from "lucide-react";
+import { Bot, Mail, Megaphone, PanelsTopLeft } from "lucide-react";
 import type { DashboardBlockStatus } from "@/lib/types";
 import type { WorkspaceAppDefinition, WorkspaceAppId } from "./workspace-types";
 
@@ -21,7 +21,13 @@ export function AppLauncher({ apps, getStatus, onOpenApp }: AppLauncherProps) {
         {apps.map((app) => {
           const status = getStatus(app);
           const Icon =
-            app.id === "email" ? Mail : app.id === "ai-helper" ? Bot : Megaphone;
+            app.id === "email"
+              ? Mail
+              : app.id === "ai-helper"
+                ? Bot
+                : app.id === "meta-ads"
+                  ? PanelsTopLeft
+                  : Megaphone;
 
           return (
             <button

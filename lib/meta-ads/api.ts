@@ -1,0 +1,22 @@
+import "server-only";
+
+import { NextRequest, NextResponse } from "next/server";
+
+export function requireMetaClientId(request: NextRequest) {
+  const clientId = request.headers.get("x-beast-client-id");
+  if (!clientId) throw new Error("UNAUTHORIZED");
+  return clientId;
+}
+
+export function requireMetaAdmin(request: NextRequest) {
+  if (request.headers.get("x-beast-role") !== "admin") throw new Error("FORBIDDEN");
+}
+
+export function metaApiError(error: unknown) {
+  const message = error instanceof Error ? error.message : "Meta Ads request failed.";
+  const status = message === "UNAUTHORIZED" ? 401 : message === "FORBIDDEN" ? 403 : 500;
+  return NextResponse.json(
+    { error: status === 401 ? "A valid client session is required." : status === 403 ? "Admin access is required." : message },
+    { status }
+  );
+}

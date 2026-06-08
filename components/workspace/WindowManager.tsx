@@ -6,6 +6,7 @@ import type { ClientAccount, DashboardBlockStatus } from "@/lib/types";
 import { AIHelperApp } from "@/components/apps/ai/AIHelperApp";
 import { EmailApp } from "@/components/apps/email/EmailApp";
 import { GoogleAdsManagerApp } from "@/components/apps/google-ads/GoogleAdsManagerApp";
+import { MetaAdsManagerApp } from "@/components/apps/meta-ads/MetaAdsManagerApp";
 import { AppWindow } from "./AppWindow";
 import { AppLauncher } from "./AppLauncher";
 import { workspaceApps } from "./workspace-apps";
@@ -163,8 +164,9 @@ function renderWindowContent(
         <p className="eyebrow">Locked</p>
         <h2>{app.title}</h2>
         <p className="muted">
-          This app is not available for the current payment status or admin block
-          settings. Contact support to activate access.
+          {app.id === "meta-ads"
+            ? "Meta Ads Manager is not enabled for this account."
+            : "This app is not available for the current payment status or admin block settings. Contact support to activate access."}
         </p>
       </div>
     );
@@ -172,5 +174,6 @@ function renderWindowContent(
 
   if (app.id === "email") return <EmailApp client={client} />;
   if (app.id === "ai-helper") return <AIHelperApp client={client} />;
+  if (app.id === "meta-ads") return <MetaAdsManagerApp client={client} />;
   return <GoogleAdsManagerApp client={client} />;
 }

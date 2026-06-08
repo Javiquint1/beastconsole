@@ -53,6 +53,60 @@ export type GoogleAdsReportRecord = {
   updatedAt: string;
 };
 
+export type MetaAdsReportRecord = {
+  id: string;
+  clientId: string;
+  reportName: string;
+  dateRangeStart: string;
+  dateRangeEnd: string;
+  totalSpend: number;
+  totalReach: number;
+  totalImpressions: number;
+  totalClicks: number;
+  totalLeads: number;
+  averageCtr: number;
+  averageCpc: number;
+  averageCpl: number;
+  notes: string;
+  recommendations: string[];
+  source: "manual" | "csv" | "meta-api";
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type MetaAdsCampaignRecord = {
+  id: string;
+  clientId: string;
+  reportId: string;
+  campaignName: string;
+  objective: string;
+  status: "Active" | "Paused" | "Completed";
+  budget: number;
+  spend: number;
+  reach: number;
+  impressions: number;
+  clicks: number;
+  leads: number;
+  ctr: number;
+  cpc: number;
+  cpl: number;
+  startDate: string;
+  endDate: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type MetaAdsUploadRecord = {
+  id: string;
+  clientId: string;
+  fileName: string;
+  uploadStatus: "received" | "imported" | "failed";
+  rowsImported: number;
+  errorMessage?: string;
+  uploadedAt: string;
+};
+
 export type EmailReportRecord = {
   id: string;
   clientId: string;
@@ -112,6 +166,9 @@ export type PortalDatabase = {
   clients: ClientRecord[];
   client_blocks: ClientBlockRecord[];
   google_ads_reports: GoogleAdsReportRecord[];
+  meta_ads_reports: MetaAdsReportRecord[];
+  meta_ads_campaigns: MetaAdsCampaignRecord[];
+  meta_ads_uploads: MetaAdsUploadRecord[];
   email_reports: EmailReportRecord[];
   ai_generations: AiGenerationRecord[];
   payments: PaymentRecord[];

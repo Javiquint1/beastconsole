@@ -30,5 +30,15 @@ export const workspaceApps: WorkspaceAppDefinition[] = [
     accent: "#e1251b",
     defaultPosition: { x: 480, y: 88 },
     defaultSize: { width: 820, height: 620 }
+  },
+  {
+    id: "meta-ads",
+    blockId: "meta-ads",
+    title: "Meta Ads Manager",
+    description: "Facebook & Instagram ad performance",
+    paid: false,
+    accent: "#1877f2",
+    defaultPosition: { x: 340, y: 120 },
+    defaultSize: { width: 940, height: 650 }
   }
 ];
