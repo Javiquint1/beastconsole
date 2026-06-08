@@ -631,6 +631,8 @@ h3 {
 
 .tiktok-ads-app{background:#f4f6f8;color:var(--ink);gap:12px;min-height:100%;padding:14px}.tiktok-ads-header{align-items:flex-start;background:#101010;border-bottom:3px solid #25f4ee;color:#fff;display:flex;justify-content:space-between;padding:14px}.tiktok-title{align-items:flex-start;display:flex;gap:10px}.tiktok-ads-header h2{font-size:1.35rem;margin:3px 0}.tiktok-ads-header span{color:rgba(255,255,255,.68);font-size:.72rem}.tiktok-metric-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(115px,1fr))}.tiktok-campaign-panel{min-width:0}.tiktok-campaign-table{min-width:1350px}.tiktok-campaign-table td:first-child{max-width:210px}.tiktok-campaign-table td:first-child small{color:var(--muted);display:block;margin-top:3px}.tiktok-bottom-grid{grid-template-columns:1fr 1fr .8fr}.tiktok-bottom-grid textarea{width:100%}.tiktok-api-card{border-style:dashed}.tiktok-api-card p{color:var(--muted);line-height:1.5}.tiktok-api-card button{background:#e8edf2;border:1px solid var(--line);border-radius:5px;color:var(--muted);padding:8px}.tiktok-upload{cursor:pointer}.tiktok-upload input{display:none}.tiktok-campaign-form{background:#fff;border:1px solid var(--line);box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;gap:10px;left:16px;padding:14px;position:absolute;right:16px;top:70px;z-index:8}.tiktok-campaign-form header{align-items:center;display:flex;justify-content:space-between}.tiktok-campaign-form header button{background:transparent;border:0;cursor:pointer}.tiktok-form-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}.tiktok-form-grid textarea{grid-column:span 2}
 
+.linkedin-ads-app{background:#f4f6f8;color:var(--ink);gap:12px;min-height:100%;padding:14px}.linkedin-ads-header{align-items:flex-start;background:#0a66c2;color:#fff;display:flex;justify-content:space-between;padding:14px}.linkedin-title{align-items:flex-start;display:flex;gap:10px}.linkedin-ads-header h2{font-size:1.35rem;margin:3px 0}.linkedin-ads-header span{color:rgba(255,255,255,.75);font-size:.72rem}.linkedin-metric-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(115px,1fr))}.linkedin-campaign-panel{min-width:0}.linkedin-campaign-table{min-width:1350px}.linkedin-campaign-table td:first-child{max-width:210px}.linkedin-campaign-table td:first-child small{color:var(--muted);display:block;margin-top:3px}.linkedin-bottom-grid{grid-template-columns:1fr 1fr .8fr}.linkedin-bottom-grid textarea{width:100%}.linkedin-api-card{border-style:dashed}.linkedin-api-card p{color:var(--muted);line-height:1.5}.linkedin-api-card button{background:#e8edf2;border:1px solid var(--line);border-radius:5px;color:var(--muted);padding:8px}.linkedin-upload{cursor:pointer}.linkedin-upload input{display:none}.linkedin-campaign-form{background:#fff;border:1px solid var(--line);box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;gap:10px;left:16px;padding:14px;position:absolute;right:16px;top:70px;z-index:8}.linkedin-campaign-form header{align-items:center;display:flex;justify-content:space-between}.linkedin-campaign-form header button{background:transparent;border:0;cursor:pointer}.linkedin-form-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}.linkedin-form-grid textarea{grid-column:span 2}
+
 .table-wrap.embedded {
   box-shadow: none;
 }
@@ -991,12 +993,16 @@ h3 {
   .meta-form-grid,
   .tiktok-metric-grid,
   .tiktok-bottom-grid,
-  .tiktok-form-grid {
+  .tiktok-form-grid,
+  .linkedin-metric-grid,
+  .linkedin-bottom-grid,
+  .linkedin-form-grid {
     grid-template-columns: 1fr;
   }
 
   .meta-ads-header,
-  .tiktok-ads-header {
+  .tiktok-ads-header,
+  .linkedin-ads-header {
     gap: 10px;
     flex-direction: column;
   }

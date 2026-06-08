@@ -24,6 +24,13 @@ export const marketingBlocks: MarketingBlock[] = [
     description: "Review TikTok ad performance and reporting."
   },
   {
+    id: "linkedin-ads",
+    name: "LinkedIn Ads Manager",
+    category: "Ads",
+    paid: true,
+    description: "Review LinkedIn campaign performance and B2B ad reporting."
+  },
+  {
     id: "email",
     name: "Email Campaign Builder",
     category: "Email",
@@ -71,6 +78,13 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
       title: "TikTok Ads Manager",
       description: "View TikTok campaign performance and reports.",
       status: getBlockStatus(client, "tiktok-ads"),
+      route: "/dashboard"
+    },
+    {
+      id: "linkedin-ads",
+      title: "LinkedIn Ads Manager",
+      description: "View LinkedIn B2B campaign performance and reports.",
+      status: getBlockStatus(client, "linkedin-ads"),
       route: "/dashboard"
     },
     {

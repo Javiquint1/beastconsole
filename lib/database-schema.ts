@@ -162,6 +162,23 @@ export type TikTokAdsUploadRecord = {
   uploadedAt: string;
 };
 
+export type LinkedInAdsReportRecord = {
+  id:string;clientId:string;reportName:string;dateRangeStart:string;dateRangeEnd:string;
+  totalSpend:number;totalImpressions:number;totalClicks:number;totalConversions:number;
+  totalLeads:number;averageCtr:number;averageCpc:number;averageCpl:number;notes:string;
+  recommendations:string[];source:"manual"|"csv"|"linkedin-api";createdAt:string;updatedAt:string;
+};
+export type LinkedInAdsCampaignRecord = {
+  id:string;clientId:string;reportId:string;campaignName:string;campaignGroup:string;
+  objective:string;status:"Active"|"Paused"|"Completed";budget:number;spend:number;
+  impressions:number;clicks:number;conversions:number;leads:number;ctr:number;cpc:number;
+  cpl:number;startDate:string;endDate:string;notes:string;createdAt:string;updatedAt:string;
+};
+export type LinkedInAdsUploadRecord = {
+  id:string;clientId:string;fileName:string;uploadStatus:"received"|"imported"|"failed";
+  rowsImported:number;errorMessage?:string;uploadedAt:string;
+};
+
 export type EmailReportRecord = {
   id: string;
   clientId: string;
@@ -227,6 +244,9 @@ export type PortalDatabase = {
   tiktok_ads_reports: TikTokAdsReportRecord[];
   tiktok_ads_campaigns: TikTokAdsCampaignRecord[];
   tiktok_ads_uploads: TikTokAdsUploadRecord[];
+  linkedin_ads_reports: LinkedInAdsReportRecord[];
+  linkedin_ads_campaigns: LinkedInAdsCampaignRecord[];
+  linkedin_ads_uploads: LinkedInAdsUploadRecord[];
   email_reports: EmailReportRecord[];
   ai_generations: AiGenerationRecord[];
   payments: PaymentRecord[];

@@ -2,7 +2,7 @@ import { initialDatabase } from "./database-seed";
 import type { PortalDatabase } from "./database-schema";
 import type { BlockId, ClientAccount } from "./types";
 
-const allBlockIds: BlockId[] = ["google-ads", "meta-ads", "tiktok-ads", "email", "free-ai"];
+const allBlockIds: BlockId[] = ["google-ads", "meta-ads", "tiktok-ads", "linkedin-ads", "email", "free-ai"];
 
 export function buildClientAccounts(database: PortalDatabase): ClientAccount[] {
   const clientAccounts = database.clients.map((client) => {
@@ -34,7 +34,7 @@ export function buildClientAccounts(database: PortalDatabase): ClientAccount[] {
       paymentStatus: "paid" as const,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      enabledBlocks: ["google-ads", "meta-ads", "tiktok-ads", "email", "free-ai"] as BlockId[],
+      enabledBlocks: ["google-ads", "meta-ads", "tiktok-ads", "linkedin-ads", "email", "free-ai"] as BlockId[],
       monthlyBudget: 0,
       leadGoal: 0
     }));

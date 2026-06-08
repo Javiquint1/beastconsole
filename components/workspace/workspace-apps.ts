@@ -50,5 +50,15 @@ export const workspaceApps: WorkspaceAppDefinition[] = [
     accent: "#25f4ee",
     defaultPosition: { x: 390, y: 150 },
     defaultSize: { width: 940, height: 650 }
+  },
+  {
+    id: "linkedin-ads",
+    blockId: "linkedin-ads",
+    title: "LinkedIn Ads Manager",
+    description: "LinkedIn campaign performance and B2B ad reporting",
+    paid: false,
+    accent: "#0a66c2",
+    defaultPosition: { x: 420, y: 135 },
+    defaultSize: { width: 960, height: 660 }
   }
 ];

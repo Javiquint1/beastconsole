@@ -101,6 +101,15 @@ export const initialDatabase: PortalDatabase = {
       updatedAt: now
     },
     {
+      id: "northstar-linkedin-ads",
+      clientId: "northstar-dental",
+      blockType: "linkedin-ads",
+      enabled: true,
+      status: "active",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
       id: "northstar-free-ai",
       clientId: "northstar-dental",
       blockType: "free-ai",
@@ -146,6 +155,15 @@ export const initialDatabase: PortalDatabase = {
       updatedAt: now
     },
     {
+      id: "verde-linkedin-ads",
+      clientId: "verde-studio",
+      blockType: "linkedin-ads",
+      enabled: false,
+      status: "locked",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
       id: "verde-free-ai",
       clientId: "verde-studio",
       blockType: "free-ai",
@@ -183,6 +201,9 @@ export const initialDatabase: PortalDatabase = {
   tiktok_ads_reports: [],
   tiktok_ads_campaigns: [],
   tiktok_ads_uploads: [],
+  linkedin_ads_reports: [],
+  linkedin_ads_campaigns: [],
+  linkedin_ads_uploads: [],
   email_reports: [
     {
       id: "email-northstar-june-recall",

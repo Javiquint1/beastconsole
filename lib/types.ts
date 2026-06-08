@@ -4,7 +4,7 @@ export type UserStatus = "active" | "inactive" | "suspended";
 
 export type PaymentStatus = "paid" | "unpaid" | "trial";
 
-export type BlockId = "google-ads" | "meta-ads" | "tiktok-ads" | "email" | "free-ai";
+export type BlockId = "google-ads" | "meta-ads" | "tiktok-ads" | "linkedin-ads" | "email" | "free-ai";
 
 export type DashboardBlockStatus = "active" | "locked" | "coming-soon";
 
