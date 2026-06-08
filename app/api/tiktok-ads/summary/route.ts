@@ -1,0 +1,4 @@
+import { NextRequest, NextResponse } from "next/server";
+import { requireTikTokClientId, tikTokApiError } from "@/lib/tiktok-ads/api";
+import { getDemoTikTokAdsData, getTikTokAdsCampaigns, getTikTokAdsReports, getTikTokAdsSummary, getTikTokRecommendations } from "@/lib/tiktok-ads/tiktokAdsService";
+export async function GET(request: NextRequest) { try { const clientId = requireTikTokClientId(request); const reports = getTikTokAdsReports(clientId); if (!reports.length) return NextResponse.json({ ...getDemoTikTokAdsData(clientId), demoMode: true }); const campaigns = getTikTokAdsCampaigns(clientId); return NextResponse.json({ report: reports[0], campaigns, summary: getTikTokAdsSummary(clientId), recommendations: getTikTokRecommendations(campaigns), demoMode: false }); } catch (e) { return tikTokApiError(e); } }

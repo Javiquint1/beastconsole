@@ -117,7 +117,7 @@ function migrateClientAccount(
 }
 
 function isBlockId(blockId: string): blockId is BlockId {
-  return blockId === "google-ads" || blockId === "meta-ads" || blockId === "email" || blockId === "free-ai";
+  return blockId === "google-ads" || blockId === "meta-ads" || blockId === "tiktok-ads" || blockId === "email" || blockId === "free-ai";
 }
 
 function isPortalDatabase(database: Partial<PortalDatabase>) {
@@ -129,6 +129,9 @@ function isPortalDatabase(database: Partial<PortalDatabase>) {
       Array.isArray(database.meta_ads_reports) &&
       Array.isArray(database.meta_ads_campaigns) &&
       Array.isArray(database.meta_ads_uploads) &&
+      Array.isArray(database.tiktok_ads_reports) &&
+      Array.isArray(database.tiktok_ads_campaigns) &&
+      Array.isArray(database.tiktok_ads_uploads) &&
       Array.isArray(database.email_reports) &&
       Array.isArray(database.ai_generations) &&
       Array.isArray(database.payments)

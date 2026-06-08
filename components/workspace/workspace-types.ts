@@ -1,6 +1,6 @@
 import type { BlockId } from "@/lib/types";
 
-export type WorkspaceAppId = "email" | "ai-helper" | "google-ads" | "meta-ads";
+export type WorkspaceAppId = "email" | "ai-helper" | "google-ads" | "meta-ads" | "tiktok-ads";
 
 export type WorkspaceAppDefinition = {
   id: WorkspaceAppId;

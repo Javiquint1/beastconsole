@@ -73,15 +73,18 @@ textarea {
   margin-top: 2px;
 }
 
-.brand-mark {
-  align-items: center;
-  background: var(--accent);
-  border-radius: 999px;
-  color: var(--accent-ink);
-  display: inline-flex;
-  height: 34px;
-  justify-content: center;
-  width: 34px;
+.brand-logo {
+  height: 52px;
+  object-fit: contain;
+  width: 67px;
+}
+
+.login-logo {
+  display: block;
+  height: auto;
+  margin: 0 auto 14px;
+  max-width: 184px;
+  width: 46%;
 }
 
 .nav {
@@ -626,6 +629,8 @@ h3 {
 
 .meta-ads-app{background:#f4f6f8;color:var(--ink);gap:12px;min-height:100%;padding:14px}.meta-ads-header{align-items:flex-start;background:#082342;color:#fff;display:flex;justify-content:space-between;padding:14px}.meta-ads-header h2{font-size:1.35rem;margin:3px 0}.meta-ads-header span{color:rgba(255,255,255,.68);font-size:.72rem}.meta-metric-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(115px,1fr))}.meta-campaign-panel{min-width:0}.meta-campaign-table{min-width:1250px}.meta-campaign-table td:first-child{max-width:210px}.meta-campaign-table td:first-child small{color:var(--muted);display:block;margin-top:3px}.meta-bottom-grid{grid-template-columns:1fr 1fr .8fr}.meta-bottom-grid textarea{width:100%}.recommendation-list{display:grid;gap:7px}.recommendation-list .notice{align-items:flex-start;display:flex;gap:6px}.meta-api-card{border-style:dashed}.meta-api-card p{color:var(--muted);line-height:1.5}.meta-api-card button{background:#e8edf2;border:1px solid var(--line);border-radius:5px;color:var(--muted);padding:8px}.meta-upload{cursor:pointer}.meta-upload input{display:none}.meta-campaign-form{background:#fff;border:1px solid var(--line);box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;gap:10px;left:16px;padding:14px;position:absolute;right:16px;top:70px;z-index:8}.meta-campaign-form header{align-items:center;display:flex;justify-content:space-between}.meta-campaign-form header button{background:transparent;border:0;cursor:pointer}.meta-form-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}.meta-form-grid textarea{grid-column:span 2}
 
+.tiktok-ads-app{background:#f4f6f8;color:var(--ink);gap:12px;min-height:100%;padding:14px}.tiktok-ads-header{align-items:flex-start;background:#101010;border-bottom:3px solid #25f4ee;color:#fff;display:flex;justify-content:space-between;padding:14px}.tiktok-title{align-items:flex-start;display:flex;gap:10px}.tiktok-ads-header h2{font-size:1.35rem;margin:3px 0}.tiktok-ads-header span{color:rgba(255,255,255,.68);font-size:.72rem}.tiktok-metric-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(115px,1fr))}.tiktok-campaign-panel{min-width:0}.tiktok-campaign-table{min-width:1350px}.tiktok-campaign-table td:first-child{max-width:210px}.tiktok-campaign-table td:first-child small{color:var(--muted);display:block;margin-top:3px}.tiktok-bottom-grid{grid-template-columns:1fr 1fr .8fr}.tiktok-bottom-grid textarea{width:100%}.tiktok-api-card{border-style:dashed}.tiktok-api-card p{color:var(--muted);line-height:1.5}.tiktok-api-card button{background:#e8edf2;border:1px solid var(--line);border-radius:5px;color:var(--muted);padding:8px}.tiktok-upload{cursor:pointer}.tiktok-upload input{display:none}.tiktok-campaign-form{background:#fff;border:1px solid var(--line);box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;gap:10px;left:16px;padding:14px;position:absolute;right:16px;top:70px;z-index:8}.tiktok-campaign-form header{align-items:center;display:flex;justify-content:space-between}.tiktok-campaign-form header button{background:transparent;border:0;cursor:pointer}.tiktok-form-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}.tiktok-form-grid textarea{grid-column:span 2}
+
 .table-wrap.embedded {
   box-shadow: none;
 }
@@ -983,11 +988,15 @@ h3 {
 
   .meta-metric-grid,
   .meta-bottom-grid,
-  .meta-form-grid {
+  .meta-form-grid,
+  .tiktok-metric-grid,
+  .tiktok-bottom-grid,
+  .tiktok-form-grid {
     grid-template-columns: 1fr;
   }
 
-  .meta-ads-header {
+  .meta-ads-header,
+  .tiktok-ads-header {
     gap: 10px;
     flex-direction: column;
   }

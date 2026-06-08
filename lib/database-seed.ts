@@ -92,6 +92,15 @@ export const initialDatabase: PortalDatabase = {
       updatedAt: now
     },
     {
+      id: "northstar-tiktok-ads",
+      clientId: "northstar-dental",
+      blockType: "tiktok-ads",
+      enabled: true,
+      status: "active",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
       id: "northstar-free-ai",
       clientId: "northstar-dental",
       blockType: "free-ai",
@@ -122,6 +131,15 @@ export const initialDatabase: PortalDatabase = {
       id: "verde-meta-ads",
       clientId: "verde-studio",
       blockType: "meta-ads",
+      enabled: false,
+      status: "locked",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
+      id: "verde-tiktok-ads",
+      clientId: "verde-studio",
+      blockType: "tiktok-ads",
       enabled: false,
       status: "locked",
       createdAt: now,
@@ -162,6 +180,9 @@ export const initialDatabase: PortalDatabase = {
   meta_ads_reports: [],
   meta_ads_campaigns: [],
   meta_ads_uploads: [],
+  tiktok_ads_reports: [],
+  tiktok_ads_campaigns: [],
+  tiktok_ads_uploads: [],
   email_reports: [
     {
       id: "email-northstar-june-recall",

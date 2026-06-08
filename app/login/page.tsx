@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LockKeyhole } from "lucide-react";
 import { loginWithEmailPassword } from "@/lib/auth";
@@ -34,6 +35,14 @@ export default function LoginPage() {
   return (
     <main className="login-wrap">
       <section className="login-panel">
+        <Image
+          className="login-logo"
+          src="/beast-console-logo.webp"
+          alt="Beast Console"
+          height={142}
+          width={184}
+          priority
+        />
         <p className="eyebrow">Secure access</p>
         <h1>Beast Console</h1>
         <p className="muted">

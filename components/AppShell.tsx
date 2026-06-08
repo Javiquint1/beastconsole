@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { clearSession } from "@/lib/storage";
@@ -25,7 +26,14 @@ export function AppShell({ user, children }: AppShellProps) {
     <div className="shell">
       <header className="topbar">
         <Link className="brand" href={user.role === "admin" ? "/admin" : "/dashboard"}>
-          <span className="brand-mark">B</span>
+          <Image
+            className="brand-logo"
+            src="/beast-console-logo.webp"
+            alt="Beast Console"
+            height={52}
+            width={67}
+            priority
+          />
           <span>
             Beast Console
             {user.companyName ? (

@@ -40,5 +40,15 @@ export const workspaceApps: WorkspaceAppDefinition[] = [
     accent: "#1877f2",
     defaultPosition: { x: 340, y: 120 },
     defaultSize: { width: 940, height: 650 }
+  },
+  {
+    id: "tiktok-ads",
+    blockId: "tiktok-ads",
+    title: "TikTok Ads Manager",
+    description: "TikTok ad performance and reporting",
+    paid: false,
+    accent: "#25f4ee",
+    defaultPosition: { x: 390, y: 150 },
+    defaultSize: { width: 940, height: 650 }
   }
 ];

@@ -107,6 +107,61 @@ export type MetaAdsUploadRecord = {
   uploadedAt: string;
 };
 
+export type TikTokAdsReportRecord = {
+  id: string;
+  clientId: string;
+  reportName: string;
+  dateRangeStart: string;
+  dateRangeEnd: string;
+  totalSpend: number;
+  totalImpressions: number;
+  totalClicks: number;
+  totalConversions: number;
+  totalVideoViews: number;
+  averageCtr: number;
+  averageCpc: number;
+  averageCpa: number;
+  notes: string;
+  recommendations: string[];
+  source: "manual" | "csv" | "tiktok-api";
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TikTokAdsCampaignRecord = {
+  id: string;
+  clientId: string;
+  reportId: string;
+  campaignName: string;
+  objective: string;
+  status: "Active" | "Paused" | "Completed";
+  budget: number;
+  spend: number;
+  impressions: number;
+  clicks: number;
+  conversions: number;
+  ctr: number;
+  cpc: number;
+  cpa: number;
+  videoViews: number;
+  engagementRate: number;
+  startDate: string;
+  endDate: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TikTokAdsUploadRecord = {
+  id: string;
+  clientId: string;
+  fileName: string;
+  uploadStatus: "received" | "imported" | "failed";
+  rowsImported: number;
+  errorMessage?: string;
+  uploadedAt: string;
+};
+
 export type EmailReportRecord = {
   id: string;
   clientId: string;
@@ -169,6 +224,9 @@ export type PortalDatabase = {
   meta_ads_reports: MetaAdsReportRecord[];
   meta_ads_campaigns: MetaAdsCampaignRecord[];
   meta_ads_uploads: MetaAdsUploadRecord[];
+  tiktok_ads_reports: TikTokAdsReportRecord[];
+  tiktok_ads_campaigns: TikTokAdsCampaignRecord[];
+  tiktok_ads_uploads: TikTokAdsUploadRecord[];
   email_reports: EmailReportRecord[];
   ai_generations: AiGenerationRecord[];
   payments: PaymentRecord[];

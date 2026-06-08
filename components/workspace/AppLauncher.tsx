@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, Mail, Megaphone, PanelsTopLeft } from "lucide-react";
+import { Bot, Mail, Megaphone, Music2, PanelsTopLeft } from "lucide-react";
 import type { DashboardBlockStatus } from "@/lib/types";
 import type { WorkspaceAppDefinition, WorkspaceAppId } from "./workspace-types";
 
@@ -27,6 +27,8 @@ export function AppLauncher({ apps, getStatus, onOpenApp }: AppLauncherProps) {
                 ? Bot
                 : app.id === "meta-ads"
                   ? PanelsTopLeft
+                  : app.id === "tiktok-ads"
+                    ? Music2
                   : Megaphone;
 
           return (
