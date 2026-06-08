@@ -31,6 +31,7 @@ export type ClientBlockRecord = {
   clientId: string;
   blockType: BlockId;
   enabled: boolean;
+  trialEnabled?: boolean;
   status: "active" | "locked" | "coming-soon";
   createdAt: string;
   updatedAt: string;
@@ -49,6 +50,16 @@ export type GoogleAdsReportRecord = {
   status: "Active" | "Paused" | "Needs Review";
   notes: string[];
   lastUpdated: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ClientAppAccessRecord = {
+  id: string;
+  clientId: string;
+  appId: "ai_helper" | "email" | "google_ads" | "meta_ads" | "tiktok_ads" | "linkedin_ads";
+  enabled: boolean;
+  trialEnabled: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -237,6 +248,7 @@ export type PortalDatabase = {
   users: UserRecord[];
   clients: ClientRecord[];
   client_blocks: ClientBlockRecord[];
+  client_app_access?: ClientAppAccessRecord[];
   google_ads_reports: GoogleAdsReportRecord[];
   meta_ads_reports: MetaAdsReportRecord[];
   meta_ads_campaigns: MetaAdsCampaignRecord[];

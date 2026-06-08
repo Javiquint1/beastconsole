@@ -88,6 +88,26 @@ export function createDatabaseFromClientAccounts(
           }))
         : []
     ),
+    client_app_access: clients.flatMap((client) =>
+      client.role === "client"
+        ? [
+            { appId: "ai_helper" as const, blockId: "free-ai" as const, trialEnabled: true },
+            { appId: "email" as const, blockId: "email" as const, trialEnabled: false },
+            { appId: "google_ads" as const, blockId: "google-ads" as const, trialEnabled: false },
+            { appId: "meta_ads" as const, blockId: "meta-ads" as const, trialEnabled: false },
+            { appId: "tiktok_ads" as const, blockId: "tiktok-ads" as const, trialEnabled: false },
+            { appId: "linkedin_ads" as const, blockId: "linkedin-ads" as const, trialEnabled: false }
+          ].map((app) => ({
+            id: `${client.id}-${app.appId}`,
+            clientId: client.id,
+            appId: app.appId,
+            enabled: client.enabledBlocks.includes(app.blockId),
+            trialEnabled: app.trialEnabled,
+            createdAt: client.createdAt,
+            updatedAt: client.updatedAt
+          }))
+        : []
+    ),
     payments: clients
       .filter((client) => client.role === "client")
       .map((client) => ({

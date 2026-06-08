@@ -6,7 +6,6 @@ import { ClientEditor } from "@/components/ClientEditor";
 import { BlockCard } from "@/components/BlockCard";
 import { marketingBlocks } from "@/lib/blocks";
 import { usePortalData } from "@/hooks/usePortalData";
-import type { BlockId, PaymentStatus, UserStatus } from "@/lib/types";
 
 type ClientDetailPageProps = {
   params: {
@@ -32,9 +31,7 @@ function ClientDetail({
   const {
     clients,
     ready,
-    setPaymentStatus,
-    setUserStatus,
-    toggleBlock,
+    updateAccessSettings,
     updateClient
   } = usePortalData();
   const client = clients.find((item) => item.id === clientId);
@@ -62,14 +59,8 @@ function ClientDetail({
           <section style={{ marginTop: 16 }}>
             <ClientEditor
               client={client}
-              onStatusChange={(status: PaymentStatus) =>
-                setPaymentStatus(client.id, status)
-              }
-              onUserStatusChange={(status: UserStatus) =>
-                setUserStatus(client.id, status)
-              }
               onClientInfoSave={(updates) => updateClient(client.id, updates)}
-              onToggleBlock={(blockId: BlockId) => toggleBlock(client.id, blockId)}
+              onSaveAccess={(settings) => updateAccessSettings(client.id, settings)}
             />
           </section>
 

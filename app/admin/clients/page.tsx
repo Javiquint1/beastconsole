@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Pencil } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { AuthGuard } from "@/components/AuthGuard";
 import { getBlockName } from "@/lib/blocks";
@@ -63,7 +64,12 @@ function ClientsIndex({ userName }: { userName: string }) {
                     </td>
                     <td>{client.enabledBlocks.map(getBlockName).join(", ") || "No tools"}</td>
                     <td>
-                      <Link className="ghost-button" href={`/admin/clients/${client.id}`}>
+                      <Link
+                        aria-label={`Edit ${client.companyName}`}
+                        className="client-edit-link"
+                        href={`/admin/clients/${client.id}`}
+                      >
+                        <Pencil aria-hidden="true" size={15} />
                         Edit
                       </Link>
                     </td>

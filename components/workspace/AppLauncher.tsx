@@ -1,16 +1,16 @@
 "use client";
 
 import { Bot, BriefcaseBusiness, Mail, Megaphone, Music2, PanelsTopLeft } from "lucide-react";
-import type { DashboardBlockStatus } from "@/lib/types";
+import type { AppAccessDecision } from "@/lib/access/appAccessService";
 import type { WorkspaceAppDefinition, WorkspaceAppId } from "./workspace-types";
 
 type AppLauncherProps = {
   apps: WorkspaceAppDefinition[];
-  getStatus: (app: WorkspaceAppDefinition) => DashboardBlockStatus;
+  getAccess: (app: WorkspaceAppDefinition) => AppAccessDecision;
   onOpenApp: (appId: WorkspaceAppId) => void;
 };
 
-export function AppLauncher({ apps, getStatus, onOpenApp }: AppLauncherProps) {
+export function AppLauncher({ apps, getAccess, onOpenApp }: AppLauncherProps) {
   return (
     <aside className="app-launcher" aria-label="App launcher">
       <div>
@@ -19,7 +19,7 @@ export function AppLauncher({ apps, getStatus, onOpenApp }: AppLauncherProps) {
       </div>
       <div className="launcher-grid">
         {apps.map((app) => {
-          const status = getStatus(app);
+          const access = getAccess(app);
           const Icon =
             app.id === "email"
               ? Mail
@@ -35,14 +35,15 @@ export function AppLauncher({ apps, getStatus, onOpenApp }: AppLauncherProps) {
 
           return (
             <button
-              className={`launcher-app ${status}`}
+              className={`launcher-app ${access.locked ? "locked" : "active"}`}
               key={app.id}
               onClick={() => onOpenApp(app.id)}
               type="button"
             >
               <Icon size={20} aria-hidden="true" />
               <span>{app.title}</span>
-              <small>{status}</small>
+              <small>{access.mode}</small>
+              {access.reason ? <em>{access.reason}</em> : null}
             </button>
           );
         })}

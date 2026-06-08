@@ -1,6 +1,6 @@
 "use client";
 
-import { getClientAccessDecision } from "@/lib/access-control";
+import { getClientDashboardAccessForAccount } from "@/lib/access/appAccessService";
 import type { ClientAccount } from "@/lib/types";
 import { WindowManager } from "./WindowManager";
 
@@ -9,7 +9,17 @@ type ClientWorkspaceProps = {
 };
 
 export function ClientWorkspace({ client }: ClientWorkspaceProps) {
-  const access = getClientAccessDecision(client);
+  const access = getClientDashboardAccessForAccount(client);
+
+  if (!access.canAccessDashboard) {
+    return (
+      <section className="locked-dashboard">
+        <p className="eyebrow">Dashboard unavailable</p>
+        <h1>Your account is {client.status}.</h1>
+        <p>Please contact your administrator to restore dashboard access.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="client-workspace">
@@ -24,7 +34,7 @@ export function ClientWorkspace({ client }: ClientWorkspaceProps) {
         </div>
         <div className="workspace-status">
           <span className={`pill ${client.paymentStatus}`}>{client.paymentStatus}</span>
-          <span className={`pill ${access.level}`}>{access.level}</span>
+          <span className={`pill ${client.status}`}>{client.status}</span>
         </div>
       </header>
       <WindowManager client={client} />

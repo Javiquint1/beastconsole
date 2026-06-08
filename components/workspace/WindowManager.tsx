@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { getDashboardBlockStatus } from "@/lib/access-control";
-import type { ClientAccount, DashboardBlockStatus } from "@/lib/types";
+import { getAppIdForBlock, getClientDashboardAccessForAccount } from "@/lib/access/appAccessService";
+import type { AppAccessDecision } from "@/lib/access/appAccessService";
+import type { ClientAccount } from "@/lib/types";
 import { AIHelperApp } from "@/components/apps/ai/AIHelperApp";
 import { EmailApp } from "@/components/apps/email/EmailApp";
 import { GoogleAdsManagerApp } from "@/components/apps/google-ads/GoogleAdsManagerApp";
@@ -30,6 +31,7 @@ export function WindowManager({ client }: WindowManagerProps) {
     () => createInitialWindowState()
   );
   const [activeWindowId, setActiveWindowId] = useState<WorkspaceAppId>("email");
+  const dashboardAccess = useMemo(() => getClientDashboardAccessForAccount(client), [client]);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(storageKey);
@@ -55,8 +57,11 @@ export function WindowManager({ client }: WindowManagerProps) {
     [windows]
   );
 
-  function getStatus(app: WorkspaceAppDefinition): DashboardBlockStatus {
-    return getDashboardBlockStatus(client, app.blockId, app.paid);
+  function getAccess(app: WorkspaceAppDefinition): AppAccessDecision {
+    const appId = getAppIdForBlock(app.blockId);
+    return appId
+      ? dashboardAccess.apps[appId]
+      : { enabled: false, locked: true, mode: "disabled", reason: "This app is not enabled for this account." };
   }
 
   function updateWindow(
@@ -101,7 +106,7 @@ export function WindowManager({ client }: WindowManagerProps) {
 
   return (
     <>
-      <AppLauncher apps={workspaceApps} getStatus={getStatus} onOpenApp={openApp} />
+      <AppLauncher apps={workspaceApps} getAccess={getAccess} onOpenApp={openApp} />
       <div className="workspace-stage">
         {workspaceApps.map((app) => (
           <AppWindow
@@ -115,7 +120,7 @@ export function WindowManager({ client }: WindowManagerProps) {
             state={windows[app.id]}
             title={app.title}
           >
-            {renderWindowContent(app, client, getStatus(app))}
+            {renderWindowContent(app, client, getAccess(app))}
           </AppWindow>
         ))}
       </div>
@@ -158,30 +163,36 @@ function createInitialWindowState() {
 function renderWindowContent(
   app: WorkspaceAppDefinition,
   client: ClientAccount,
-  status: DashboardBlockStatus
+  access: AppAccessDecision
 ) {
-  if (status !== "active") {
+  if (access.locked) {
     return (
       <div className="locked-app-content">
         <p className="eyebrow">Locked</p>
         <h2>{app.title}</h2>
         <p className="muted">
-          {app.id === "meta-ads"
-            ? "Meta Ads Manager is not enabled for this account."
-            : app.id === "tiktok-ads"
-              ? "TikTok Ads Manager is not enabled for this account."
-              : app.id === "linkedin-ads"
-                ? "LinkedIn Ads Manager is not enabled for this account."
-            : "This app is not available for the current payment status or admin block settings. Contact support to activate access."}
+          {access.mode === "disabled"
+            ? `${app.title} is not enabled for this account. Please contact your administrator.`
+            : access.reason || `${app.title} is not enabled for this account. Please contact your administrator.`}
         </p>
       </div>
     );
   }
 
-  if (app.id === "email") return <EmailApp client={client} />;
-  if (app.id === "ai-helper") return <AIHelperApp client={client} />;
-  if (app.id === "meta-ads") return <MetaAdsManagerApp client={client} />;
-  if (app.id === "tiktok-ads") return <TikTokAdsManagerApp client={client} />;
-  if (app.id === "linkedin-ads") return <LinkedInAdsManagerApp client={client} />;
-  return <GoogleAdsManagerApp client={client} />;
+  const content =
+    app.id === "email" ? <EmailApp client={client} /> :
+    app.id === "ai-helper" ? <AIHelperApp client={client} /> :
+    app.id === "meta-ads" ? <MetaAdsManagerApp client={client} /> :
+    app.id === "tiktok-ads" ? <TikTokAdsManagerApp client={client} /> :
+    app.id === "linkedin-ads" ? <LinkedInAdsManagerApp client={client} /> :
+    <GoogleAdsManagerApp client={client} />;
+
+  return (
+    <>
+      {access.mode === "trial" ? (
+        <div className="trial-access-banner">This app is available in trial/demo mode only.</div>
+      ) : null}
+      {content}
+    </>
+  );
 }

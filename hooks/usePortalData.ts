@@ -27,9 +27,15 @@ export function usePortalData() {
     [clients]
   );
 
-  function persist(nextClients: ClientAccount[]) {
-    setClients(nextClients);
-    saveClients(nextClients);
+  function persist(
+    update: ClientAccount[] | ((current: ClientAccount[]) => ClientAccount[])
+  ) {
+    setClients((current) => {
+      const nextClients =
+        typeof update === "function" ? update(current) : update;
+      saveClients(nextClients);
+      return nextClients;
+    });
   }
 
   async function addClient(
@@ -55,7 +61,7 @@ export function usePortalData() {
       updatedAt: now
     };
 
-    persist([...clients, client]);
+    persist((current) => [...current, client]);
     return client;
   }
 
@@ -63,8 +69,8 @@ export function usePortalData() {
     clientId: string,
     updates: Partial<Omit<ClientAccount, "id">>
   ) {
-    persist(
-      clients.map((client) =>
+    persist((current) =>
+      current.map((client) =>
         client.id === clientId
           ? { ...client, ...updates, updatedAt: new Date().toISOString() }
           : client
@@ -81,14 +87,24 @@ export function usePortalData() {
   }
 
   function toggleBlock(clientId: string, blockId: BlockId) {
-    const client = clients.find((item) => item.id === clientId);
-    if (!client) return;
+    persist((current) =>
+      current.map((client) => {
+        if (client.id !== clientId) return client;
 
-    const enabledBlocks = client.enabledBlocks.includes(blockId)
-      ? client.enabledBlocks.filter((id) => id !== blockId)
-      : [...client.enabledBlocks, blockId];
+        const enabledBlocks = client.enabledBlocks.includes(blockId)
+          ? client.enabledBlocks.filter((id) => id !== blockId)
+          : [...client.enabledBlocks, blockId];
 
-    updateClient(clientId, { enabledBlocks });
+        return { ...client, enabledBlocks, updatedAt: new Date().toISOString() };
+      })
+    );
+  }
+
+  function updateAccessSettings(
+    clientId: string,
+    settings: Pick<ClientAccount, "paymentStatus" | "status" | "enabledBlocks">
+  ) {
+    updateClient(clientId, settings);
   }
 
   return {
@@ -99,6 +115,7 @@ export function usePortalData() {
     setPaymentStatus,
     setUserStatus,
     toggleBlock,
+    updateAccessSettings,
     updateClient
   };
 }

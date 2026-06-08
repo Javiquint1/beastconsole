@@ -1,4 +1,5 @@
 import type { BlockId, ClientAccount, DashboardBlockStatus } from "./types";
+import { getAppIdForBlock, getClientDashboardAccessForAccount } from "./access/appAccessService";
 
 export type PaymentAccessSource =
   | "manual-admin"
@@ -24,7 +25,8 @@ export const LOCKED_DASHBOARD_MESSAGE =
 export function getClientAccessDecision(
   client: ClientAccount
 ): ClientAccessDecision {
-  if (client.status !== "active") {
+  const dashboard = getClientDashboardAccessForAccount(client);
+  if (!dashboard.canAccessDashboard) {
     return lockedDecision("manual-admin");
   }
 
@@ -54,21 +56,9 @@ export function getDashboardBlockStatus(
   blockId: BlockId,
   isPaidBlock: boolean
 ): DashboardBlockStatus {
-  const access = getClientAccessDecision(client);
-
-  if (!client.enabledBlocks.includes(blockId)) {
-    return "locked";
-  }
-
-  if (!access.canAccessDashboard) {
-    return "locked";
-  }
-
-  if (isPaidBlock && !access.canAccessPaidBlocks) {
-    return "locked";
-  }
-
-  return "active";
+  const appId = getAppIdForBlock(blockId);
+  if (!appId) return "locked";
+  return getClientDashboardAccessForAccount(client).apps[appId].locked ? "locked" : "active";
 }
 
 export function canOpenDashboardBlock(
