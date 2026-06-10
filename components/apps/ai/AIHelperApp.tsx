@@ -4,8 +4,7 @@ import { Copy, RefreshCcw, Send } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   aiCopyTools,
-  createAiGenerationRecord,
-  generateAiCopy
+  createAiGenerationRecord
 } from "@/lib/ai-copy-tools";
 import { loadDatabase, saveDatabase } from "@/lib/storage";
 import type { AiCopyInput, AiCopyToolId } from "@/lib/ai-copy-tools";
@@ -31,6 +30,8 @@ export function AIHelperApp({ client }: AIHelperAppProps) {
   const [prompt, setPrompt] = useState("");
   const [output, setOutput] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const selectedTool = useMemo(
     () =>
@@ -40,34 +41,63 @@ export function AIHelperApp({ client }: AIHelperAppProps) {
     [toolId]
   );
 
-  function generate() {
+  async function generate() {
+    if (!prompt.trim()) {
+      setError("Enter a prompt before generating.");
+      return;
+    }
+
     const input: AiCopyInput = {
       businessName: client.companyName,
-      service: prompt || "your service",
-      offer: prompt || "a helpful business update",
+      service: prompt,
+      offer: prompt,
       tone: "Professional",
       targetAudience: "local customers"
     };
-    const generated =
-      toolId === "business-helper"
-        ? `${client.companyName} should focus on one clear next action: ${prompt || "choose a weekly promotion, define the audience, and publish it consistently."}`
-        : generateAiCopy(toolId, input);
 
-    setOutput(generated);
-    setHistory((current) => [
-      { id: `${Date.now()}`, output: generated, toolId: toolId === "business-helper" ? "promotion-text" : toolId },
-      ...current
-    ]);
+    setLoading(true);
+    setError("");
 
-    if (toolId !== "business-helper") {
-      const database = loadDatabase();
-      saveDatabase({
-        ...database,
-        ai_generations: [
-          createAiGenerationRecord(client.id, toolId, input, generated),
-          ...database.ai_generations
-        ]
+    try {
+      const response = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: [
+            `Business: ${client.companyName}`,
+            `Task: ${selectedTool.label}`,
+            `Request: ${prompt.trim()}`,
+            "Tone: Professional",
+            "Audience: local customers"
+          ].join("\n")
+        })
       });
+      const data = (await response.json()) as { reply?: string; error?: string };
+
+      if (!response.ok || !data.reply) {
+        throw new Error(data.error || "The AI Helper could not generate a response.");
+      }
+
+      setOutput(data.reply);
+      setHistory((current) => [
+        { id: `${Date.now()}`, output: data.reply!, toolId: toolId === "business-helper" ? "promotion-text" : toolId },
+        ...current
+      ]);
+
+      if (toolId !== "business-helper") {
+        const database = loadDatabase();
+        saveDatabase({
+          ...database,
+          ai_generations: [
+            createAiGenerationRecord(client.id, toolId, input, data.reply),
+            ...database.ai_generations
+          ]
+        });
+      }
+    } catch (generationError) {
+      setError(generationError instanceof Error ? generationError.message : "The AI Helper request failed.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -106,11 +136,11 @@ export function AIHelperApp({ client }: AIHelperAppProps) {
             />
           </div>
           <div className="app-actions">
-            <button className="button" onClick={generate} type="button">
+            <button className="button" disabled={loading} onClick={generate} type="button">
               <Send size={16} aria-hidden="true" />
-              Generate
+              {loading ? "Generating..." : "Generate"}
             </button>
-            <button className="ghost-button light" onClick={generate} type="button">
+            <button className="ghost-button light" disabled={loading} onClick={generate} type="button">
               <RefreshCcw size={16} aria-hidden="true" />
               Regenerate
             </button>
@@ -125,7 +155,7 @@ export function AIHelperApp({ client }: AIHelperAppProps) {
           </div>
           <section className="mini-panel output-panel">
             <h3>Output area</h3>
-            <p>{output || "Generated copy will appear here."}</p>
+            {error ? <p role="alert">{error}</p> : <p>{output || "Generated copy will appear here."}</p>}
           </section>
         </main>
 
