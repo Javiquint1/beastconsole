@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { AppShell } from "@/components/AppShell";
 import { AuthGuard } from "@/components/AuthGuard";
 import { ClientEditor } from "@/components/ClientEditor";
@@ -8,15 +9,17 @@ import { marketingBlocks } from "@/lib/blocks";
 import { usePortalData } from "@/hooks/usePortalData";
 
 type ClientDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default function ClientDetailPage({ params }: ClientDetailPageProps) {
+  const { id } = use(params);
+
   return (
     <AuthGuard allowedRole="admin">
-      {(user) => <ClientDetail clientId={params.id} userName={user.name} />}
+      {(user) => <ClientDetail clientId={id} userName={user.name} />}
     </AuthGuard>
   );
 }

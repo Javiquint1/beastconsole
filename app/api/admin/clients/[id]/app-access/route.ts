@@ -3,19 +3,19 @@ import { getClientAppAccess, registerClientAccessAccount, updateClientAppAccess 
 import type { AppAccessId } from "@/lib/access/appAccessService";
 import type { ClientAccount } from "@/lib/types";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAdmin(request)) return forbidden();
-  try { return NextResponse.json(getClientAppAccess(params.id)); }
+  try { return NextResponse.json(getClientAppAccess((await params).id)); }
   catch (error) { return failure(error); }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAdmin(request)) return forbidden();
   try {
     const body = (await request.json()) as { apps?: Partial<Record<AppAccessId, boolean>>; client?: ClientAccount };
     if (!body.apps) return NextResponse.json({ error: "Apps object is required." }, { status: 400 });
     if (body.client) registerClientAccessAccount(body.client);
-    return NextResponse.json(updateClientAppAccess(params.id, body.apps));
+    return NextResponse.json(updateClientAppAccess((await params).id, body.apps));
   } catch (error) { return failure(error); }
 }
 

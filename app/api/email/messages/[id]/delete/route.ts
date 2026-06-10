@@ -3,10 +3,10 @@ import { emailApiError } from "@/lib/email/api";
 import { requireClientId } from "@/lib/email/server-auth";
 import { updateMessage } from "@/lib/email/store";
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const clientId = requireClientId(request);
-    return NextResponse.json({ message: updateMessage(clientId, params.id, { folder: "trash" }) });
+    return NextResponse.json({ message: updateMessage(clientId, (await params).id, { folder: "trash" }) });
   } catch (error) {
     return emailApiError(error);
   }
