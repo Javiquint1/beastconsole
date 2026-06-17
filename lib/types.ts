@@ -2,7 +2,16 @@ export type UserRole = "admin" | "client";
 
 export type UserStatus = "active" | "inactive" | "suspended";
 
-export type PaymentStatus = "paid" | "unpaid" | "trial";
+export type PaymentStatus =
+  | "paid"
+  | "active"
+  | "trial"
+  | "trialing"
+  | "unpaid"
+  | "past_due"
+  | "payment_failed"
+  | "canceled"
+  | "incomplete_expired";
 
 export type BlockId = "google-ads" | "meta-ads" | "tiktok-ads" | "linkedin-ads" | "email" | "free-ai";
 
@@ -19,6 +28,9 @@ export type ClientAccount = {
   role: UserRole;
   status: UserStatus;
   paymentStatus: PaymentStatus;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  subscriptionPlan?: string;
   createdAt: string;
   updatedAt: string;
   enabledBlocks: BlockId[];

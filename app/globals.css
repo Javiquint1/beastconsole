@@ -896,7 +896,8 @@ h3 {
 }
 
 .pill.active,
-.pill.paid {
+.pill.paid,
+.pill.trialing {
   background: #fff0b8;
   color: #6f4f00;
 }
@@ -907,6 +908,10 @@ h3 {
 }
 
 .pill.unpaid,
+.pill.past_due,
+.pill.payment_failed,
+.pill.canceled,
+.pill.incomplete_expired,
 .pill.inactive,
 .pill.suspended,
 .pill.locked {

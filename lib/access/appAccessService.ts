@@ -53,6 +53,23 @@ export function registerClientAccessAccount(client: ClientAccount) {
   serverClients.set(client.id, client);
 }
 
+export function findClientAccessAccount(options: {
+  clientId?: string;
+  email?: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+}) {
+  const normalizedEmail = options.email?.trim().toLowerCase();
+  return Array.from(serverClients.values()).find((client) => {
+    return (
+      (options.clientId && client.id === options.clientId) ||
+      (normalizedEmail && client.email.toLowerCase() === normalizedEmail) ||
+      (options.stripeCustomerId && client.stripeCustomerId === options.stripeCustomerId) ||
+      (options.stripeSubscriptionId && client.stripeSubscriptionId === options.stripeSubscriptionId)
+    );
+  });
+}
+
 export function getClientAppAccess(clientId: string) {
   const client = serverClients.get(clientId);
   if (!client) throw new Error("Client not found.");
@@ -112,7 +129,13 @@ function decideAppAccess(client: ClientAccount, blockId: BlockId, trialEnabled: 
   const enabled = client.enabledBlocks.includes(blockId);
   if (client.status !== "active") return locked(enabled, "This account is suspended or inactive.");
   if (!enabled) return { enabled: false, locked: true, mode: "disabled", reason: "This app is not enabled for this account." };
-  if (client.paymentStatus === "unpaid") return locked(true, "This app is locked because your account is not currently paid.");
+  if (
+    client.paymentStatus === "unpaid" ||
+    client.paymentStatus === "past_due" ||
+    client.paymentStatus === "payment_failed" ||
+    client.paymentStatus === "canceled" ||
+    client.paymentStatus === "incomplete_expired"
+  ) return locked(true, "This app is locked because your account is not currently paid.");
   if (client.paymentStatus === "trial") {
     return trialEnabled
       ? { enabled: true, locked: false, mode: "trial", reason: "This app is available in trial/demo mode only." }

@@ -30,7 +30,7 @@ export function getClientAccessDecision(
     return lockedDecision("manual-admin");
   }
 
-  if (client.paymentStatus === "paid") {
+  if (client.paymentStatus === "paid" || client.paymentStatus === "active" || client.paymentStatus === "trialing") {
     return {
       level: "unlocked",
       canAccessDashboard: true,
