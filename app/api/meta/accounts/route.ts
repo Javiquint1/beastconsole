@@ -1,2 +1,14 @@
-import { NextResponse } from "next/server";
-export async function GET() { return NextResponse.json({ accounts: [], available: false }); }
+import { NextRequest, NextResponse } from "next/server";
+import { getMetaConnection } from "@/lib/meta/oauth";
+
+export async function GET(request: NextRequest) {
+  const clientId = request.nextUrl.searchParams.get("clientId")?.trim();
+  if (!clientId) return NextResponse.json({ error: "Missing clientId." }, { status: 400 });
+
+  const connection = getMetaConnection(clientId);
+  return NextResponse.json({
+    connected: Boolean(connection),
+    accounts: connection?.adAccounts || [],
+    selectedAdAccountId: connection?.selectedAdAccountId || null
+  });
+}
