@@ -1,7 +1,9 @@
 import "server-only";
 
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
+import { randomBytes } from "crypto";
 import { canClientAccessApp } from "@/lib/access/appAccessService";
+import { getSql } from "@/lib/db/client";
+import { decryptSecret, encryptSecret } from "@/lib/security/encryption";
 
 export type MetaAdAccount = {
   id: string;
@@ -13,20 +15,13 @@ export type MetaAdAccount = {
 
 export type MetaConnection = {
   clientId: string;
-  encryptedAccessToken: string;
+  accessToken: string;
   selectedAdAccountId: string | null;
   adAccounts: MetaAdAccount[];
   tokenExpiresAt: string | null;
   createdAt: string;
   updatedAt: string;
 };
-
-const globalMetaStore = globalThis as typeof globalThis & {
-  beastMetaConnections?: Map<string, MetaConnection>;
-};
-
-const metaConnections = globalMetaStore.beastMetaConnections ?? new Map<string, MetaConnection>();
-globalMetaStore.beastMetaConnections = metaConnections;
 
 export const META_NONCE_COOKIE = "beast_meta_oauth_nonce";
 
@@ -92,72 +87,138 @@ export function canStartMetaOAuth(clientId: string) {
   }
 }
 
-export function saveMetaConnection(connection: Omit<MetaConnection, "createdAt" | "updatedAt">) {
-  const now = new Date().toISOString();
-  const existing = metaConnections.get(connection.clientId);
-  const saved: MetaConnection = {
-    ...connection,
-    createdAt: existing?.createdAt || now,
-    updatedAt: now
-  };
-  metaConnections.set(connection.clientId, saved);
+export async function saveMetaConnection(
+  connection: {
+    clientId: string;
+    accessToken: string;
+    selectedAdAccountId: string | null;
+    adAccounts: MetaAdAccount[];
+    tokenExpiresAt: string | null;
+  }
+) {
+  const encryptedAccessToken = encryptSecret(connection.accessToken);
+  const sql = getSql();
+  const rows = await sql`
+    insert into meta_connections (
+      client_id,
+      encrypted_access_token,
+      selected_ad_account_id,
+      ad_accounts,
+      token_expires_at,
+      updated_at
+    )
+    values (
+      ${connection.clientId},
+      ${encryptedAccessToken},
+      ${connection.selectedAdAccountId},
+      ${JSON.stringify(connection.adAccounts)}::jsonb,
+      ${connection.tokenExpiresAt},
+      now()
+    )
+    on conflict (client_id)
+    do update set
+      encrypted_access_token = excluded.encrypted_access_token,
+      selected_ad_account_id = excluded.selected_ad_account_id,
+      ad_accounts = excluded.ad_accounts,
+      token_expires_at = excluded.token_expires_at,
+      updated_at = now()
+    returning
+      client_id,
+      encrypted_access_token,
+      selected_ad_account_id,
+      ad_accounts,
+      token_expires_at,
+      created_at,
+      updated_at
+  `;
 
-  // TODO: Persist this record in the production database when server-side storage
-  // is available. Store clientId, encryptedAccessToken, selectedAdAccountId,
-  // adAccounts JSON, tokenExpiresAt, createdAt, and updatedAt.
-  console.info("[meta] connection stored in temporary server memory", {
-    clientId: saved.clientId,
-    adAccounts: saved.adAccounts.length,
-    selectedAdAccountId: saved.selectedAdAccountId
-  });
-
-  return saved;
+  return mapMetaConnection(rows[0]);
 }
 
-export function getMetaConnection(clientId: string) {
-  return metaConnections.get(clientId) || null;
+export async function getMetaConnection(clientId: string) {
+  const sql = getSql();
+  const rows = await sql`
+    select
+      client_id,
+      encrypted_access_token,
+      selected_ad_account_id,
+      ad_accounts,
+      token_expires_at,
+      created_at,
+      updated_at
+    from meta_connections
+    where client_id = ${clientId}
+    limit 1
+  `;
+  return rows[0] ? mapMetaConnection(rows[0]) : null;
 }
 
-export function updateSelectedMetaAdAccount(clientId: string, selectedAdAccountId: string) {
-  const connection = getMetaConnection(clientId);
+export async function updateSelectedMetaAdAccount(clientId: string, selectedAdAccountId: string) {
+  const connection = await getMetaConnection(clientId);
   if (!connection) return null;
   if (!connection.adAccounts.some((account) => account.id === selectedAdAccountId)) return null;
-  const updated = { ...connection, selectedAdAccountId, updatedAt: new Date().toISOString() };
-  metaConnections.set(clientId, updated);
-  return updated;
+  const sql = getSql();
+  const rows = await sql`
+    update meta_connections
+    set selected_ad_account_id = ${selectedAdAccountId}, updated_at = now()
+    where client_id = ${clientId}
+    returning
+      client_id,
+      encrypted_access_token,
+      selected_ad_account_id,
+      ad_accounts,
+      token_expires_at,
+      created_at,
+      updated_at
+  `;
+  return rows[0] ? mapMetaConnection(rows[0]) : null;
 }
 
-export function deleteMetaConnection(clientId: string) {
-  return metaConnections.delete(clientId);
+export async function deleteMetaConnection(clientId: string) {
+  const sql = getSql();
+  const rows = await sql`
+    delete from meta_connections
+    where client_id = ${clientId}
+    returning client_id
+  `;
+  return rows.length > 0;
 }
 
 export function encryptToken(token: string) {
-  const key = getEncryptionKey();
-  const iv = randomBytes(12);
-  const cipher = createCipheriv("aes-256-gcm", key, iv);
-  const encrypted = Buffer.concat([cipher.update(token, "utf8"), cipher.final()]);
-  const tag = cipher.getAuthTag();
-  return [iv, tag, encrypted].map((part) => part.toString("base64url")).join(".");
+  return encryptSecret(token);
 }
 
 export function decryptToken(encryptedToken: string) {
-  const [ivValue, tagValue, encryptedValue] = encryptedToken.split(".");
-  if (!ivValue || !tagValue || !encryptedValue) throw new Error("Invalid encrypted Meta token.");
-  const decipher = createDecipheriv(
-    "aes-256-gcm",
-    getEncryptionKey(),
-    Buffer.from(ivValue, "base64url")
-  );
-  decipher.setAuthTag(Buffer.from(tagValue, "base64url"));
-  const decrypted = Buffer.concat([
-    decipher.update(Buffer.from(encryptedValue, "base64url")),
-    decipher.final()
-  ]);
-  return decrypted.toString("utf8");
+  return decryptSecret(encryptedToken);
 }
 
-function getEncryptionKey() {
-  const secret = process.env.META_TOKEN_ENCRYPTION_KEY || process.env.META_APP_SECRET;
-  if (!secret) throw new Error("Meta token encryption key is missing.");
-  return createHash("sha256").update(secret).digest();
+function mapMetaConnection(row: Record<string, unknown>): MetaConnection {
+  const encryptedAccessToken = String(row.encrypted_access_token || "");
+  return {
+    clientId: String(row.client_id || ""),
+    accessToken: decryptSecret(encryptedAccessToken),
+    selectedAdAccountId: typeof row.selected_ad_account_id === "string" ? row.selected_ad_account_id : null,
+    adAccounts: normalizeAdAccounts(row.ad_accounts),
+    tokenExpiresAt: row.token_expires_at ? new Date(String(row.token_expires_at)).toISOString() : null,
+    createdAt: row.created_at ? new Date(String(row.created_at)).toISOString() : "",
+    updatedAt: row.updated_at ? new Date(String(row.updated_at)).toISOString() : ""
+  };
+}
+
+function normalizeAdAccounts(value: unknown): MetaAdAccount[] {
+  if (typeof value === "string") {
+    try {
+      return normalizeAdAccounts(JSON.parse(value) as unknown);
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(value)) return [];
+  return value.filter(isMetaAdAccount);
+}
+
+function isMetaAdAccount(value: unknown): value is MetaAdAccount {
+  if (!value || typeof value !== "object") return false;
+  const account = value as Partial<MetaAdAccount>;
+  return typeof account.id === "string" && typeof account.name === "string";
 }

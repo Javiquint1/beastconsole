@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteMetaConnection } from "@/lib/meta/oauth";
 
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json().catch(() => ({}))) as { clientId?: string };
     const clientId = body.clientId?.trim() || request.nextUrl.searchParams.get("clientId")?.trim();
     if (!clientId) return NextResponse.json({ error: "Missing clientId." }, { status: 400 });
-    deleteMetaConnection(clientId);
+    await deleteMetaConnection(clientId);
     return NextResponse.json({ connected: false, adAccounts: [], selectedAdAccountId: null });
   } catch (error) {
     return NextResponse.json(

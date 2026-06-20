@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMetaConnection } from "@/lib/meta/oauth";
 
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json().catch(() => ({}))) as { clientId?: string };
     const clientId = body.clientId?.trim() || request.nextUrl.searchParams.get("clientId")?.trim();
     if (!clientId) return NextResponse.json({ error: "Missing clientId." }, { status: 400 });
 
-    const connection = getMetaConnection(clientId);
+    const connection = await getMetaConnection(clientId);
     if (!connection) {
       return NextResponse.json({ error: "Meta Ads is not connected for this client." }, { status: 404 });
     }

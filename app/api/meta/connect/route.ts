@@ -7,6 +7,8 @@ import {
   getMetaConfig
 } from "@/lib/meta/oauth";
 
+export const runtime = "nodejs";
+
 // Meta Developer settings:
 // Valid OAuth Redirect URI: https://beastconsole.vercel.app/api/meta/callback
 // App domain: beastconsole.vercel.app

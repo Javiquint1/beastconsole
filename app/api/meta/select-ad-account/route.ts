@@ -16,14 +16,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Connected Meta ad account was not found." }, { status: 404 });
     }
 
-    return NextResponse.json({
-      connected: true,
-      adAccounts: updated.adAccounts,
-      selectedAdAccountId: updated.selectedAdAccountId
-    });
+    return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Meta account selection failed." },
+      { error: error instanceof Error ? error.message : "Meta ad account selection failed." },
       { status: 500 }
     );
   }

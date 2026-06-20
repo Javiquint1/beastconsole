@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decryptToken, getMetaConfig, getMetaConnection } from "@/lib/meta/oauth";
+import { getMetaConfig, getMetaConnection } from "@/lib/meta/oauth";
+
+export const runtime = "nodejs";
 
 type MetaInsight = {
   campaign_name?: string;
@@ -22,20 +24,22 @@ export async function GET(request: NextRequest) {
     const clientId = request.nextUrl.searchParams.get("clientId")?.trim();
     const adAccountId = request.nextUrl.searchParams.get("adAccountId")?.trim();
     if (!clientId) return NextResponse.json({ error: "Missing clientId." }, { status: 400 });
-    if (!adAccountId) return NextResponse.json({ error: "Missing adAccountId." }, { status: 400 });
 
-    const connection = getMetaConnection(clientId);
+    const connection = await getMetaConnection(clientId);
     if (!connection) {
       return NextResponse.json({ error: "Meta Ads is not connected for this client." }, { status: 404 });
     }
 
-    const normalizedAdAccountId = normalizeAdAccountId(adAccountId);
+    const normalizedAdAccountId = normalizeAdAccountId(adAccountId || connection.selectedAdAccountId || "");
+    if (!normalizedAdAccountId) {
+      return NextResponse.json({ error: "No Meta ad account is selected." }, { status: 400 });
+    }
+
     if (!connection.adAccounts.some((account) => account.id === normalizedAdAccountId)) {
       return NextResponse.json({ error: "Ad account is not connected for this client." }, { status: 403 });
     }
 
     const config = getMetaConfig();
-    const accessToken = decryptToken(connection.encryptedAccessToken);
     const url = new URL(
       `https://graph.facebook.com/${config.graphVersion}/act_${normalizedAdAccountId}/insights`
     );
@@ -44,7 +48,7 @@ export async function GET(request: NextRequest) {
     url.searchParams.set("date_preset", "last_30d");
 
     const response = await fetch(url, {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: `Bearer ${connection.accessToken}` }
     });
     const data = (await response.json()) as MetaInsightsResponse;
     if (!response.ok || data.error) {

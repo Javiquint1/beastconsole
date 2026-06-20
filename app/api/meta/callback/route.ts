@@ -3,10 +3,11 @@ import {
   META_NONCE_COOKIE,
   MetaAdAccount,
   decodeMetaState,
-  encryptToken,
   getMetaConfig,
   saveMetaConnection
 } from "@/lib/meta/oauth";
+
+export const runtime = "nodejs";
 
 type MetaTokenResponse = {
   access_token?: string;
@@ -57,9 +58,9 @@ export async function GET(request: NextRequest) {
     if (!adAccounts.length) throw new Error("No connected Meta ad accounts were found.");
 
     const expiresIn = longToken.expires_in || shortToken.expires_in;
-    saveMetaConnection({
+    await saveMetaConnection({
       clientId: state.clientId,
-      encryptedAccessToken: encryptToken(accessToken),
+      accessToken,
       selectedAdAccountId: normalizeAdAccountId(adAccounts[0].id),
       adAccounts: adAccounts.map((account) => ({ ...account, id: normalizeAdAccountId(account.id) })),
       tokenExpiresAt: expiresIn

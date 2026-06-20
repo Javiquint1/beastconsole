@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { canStartMetaOAuth, getMetaConnection } from "@/lib/meta/oauth";
 
+export const runtime = "nodejs";
+
 export async function GET(request: NextRequest) {
   const clientId = request.nextUrl.searchParams.get("clientId")?.trim();
   if (!clientId) {
@@ -17,7 +19,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const connection = getMetaConnection(clientId);
+  const connection = await getMetaConnection(clientId);
   return NextResponse.json({
     connected: Boolean(connection),
     locked: false,
