@@ -75,6 +75,7 @@ export async function POST(request: Request) {
       mode: "subscription",
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
+      allow_promotion_codes: true,
       metadata,
       subscription_data: { metadata },
       success_url: `${appUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
