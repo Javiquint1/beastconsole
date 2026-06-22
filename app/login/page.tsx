@@ -50,6 +50,10 @@ export default function LoginPage() {
           client management, and client users are routed to their own dashboard.
         </p>
 
+        <div className="notice login-help">
+          Demo login credentials are: ops@northstardental.test / client123
+        </div>
+
         <form className="form" onSubmit={submit}>
           <div className="field">
             <label htmlFor="email">Email</label>
@@ -78,12 +82,6 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
-
-        <div className="notice login-help">
-          Demo accounts: admin@beastconsole.test / admin123,
-          ops@northstardental.test / client123, hello@verdestudio.test /
-          trial123.
-        </div>
       </section>
     </main>
   );
