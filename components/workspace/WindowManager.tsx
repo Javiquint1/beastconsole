@@ -10,6 +10,7 @@ import { GoogleAdsManagerApp } from "@/components/apps/google-ads/GoogleAdsManag
 import { MetaAdsManagerApp } from "@/components/apps/meta-ads/MetaAdsManagerApp";
 import { TikTokAdsManagerApp } from "@/components/apps/tiktok-ads/TikTokAdsManagerApp";
 import { LinkedInAdsManagerApp } from "@/components/apps/linkedin-ads/LinkedInAdsManagerApp";
+import { HubSpotCrmManagerApp } from "@/components/apps/hubspot-crm/HubSpotCrmManagerApp";
 import { AppWindow } from "./AppWindow";
 import { AppLauncher } from "./AppLauncher";
 import { workspaceApps } from "./workspace-apps";
@@ -185,6 +186,7 @@ function renderWindowContent(
     app.id === "meta-ads" ? <MetaAdsManagerApp client={client} /> :
     app.id === "tiktok-ads" ? <TikTokAdsManagerApp client={client} /> :
     app.id === "linkedin-ads" ? <LinkedInAdsManagerApp client={client} /> :
+    app.id === "hubspot-crm" ? <HubSpotCrmManagerApp client={client} /> :
     <GoogleAdsManagerApp client={client} />;
 
   return (

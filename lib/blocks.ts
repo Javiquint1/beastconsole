@@ -31,6 +31,13 @@ export const marketingBlocks: MarketingBlock[] = [
     description: "Review LinkedIn campaign performance and B2B ad reporting."
   },
   {
+    id: "hubspot-crm",
+    name: "HubSpot CRM Manager",
+    category: "CRM",
+    paid: true,
+    description: "Track contacts, companies, deals, pipeline value, lead source, tasks, and CRM activity."
+  },
+  {
     id: "email",
     name: "Email Campaign Builder",
     category: "Email",
@@ -85,6 +92,13 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
       title: "LinkedIn Ads Manager",
       description: "View LinkedIn B2B campaign performance and reports.",
       status: getBlockStatus(client, "linkedin-ads"),
+      route: "/dashboard"
+    },
+    {
+      id: "hubspot-crm",
+      title: "HubSpot CRM Manager",
+      description: "View contacts, deals, pipeline value, lead sources, and CRM follow-up tasks.",
+      status: getBlockStatus(client, "hubspot-crm"),
       route: "/dashboard"
     },
     {

@@ -13,7 +13,7 @@ export type PaymentStatus =
   | "canceled"
   | "incomplete_expired";
 
-export type BlockId = "google-ads" | "meta-ads" | "tiktok-ads" | "linkedin-ads" | "email" | "free-ai";
+export type BlockId = "google-ads" | "meta-ads" | "tiktok-ads" | "linkedin-ads" | "hubspot-crm" | "email" | "free-ai";
 
 export type DashboardBlockStatus = "active" | "locked" | "coming-soon";
 
@@ -52,7 +52,7 @@ export type SessionUser = {
 export type MarketingBlock = {
   id: BlockId;
   name: string;
-  category: "Ads" | "Email" | "AI";
+  category: "Ads" | "CRM" | "Email" | "AI";
   paid: boolean;
   description: string;
 };

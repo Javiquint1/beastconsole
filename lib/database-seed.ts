@@ -110,6 +110,15 @@ export const initialDatabase: PortalDatabase = {
       updatedAt: now
     },
     {
+      id: "northstar-hubspot-crm",
+      clientId: "northstar-dental",
+      blockType: "hubspot-crm",
+      enabled: true,
+      status: "active",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
       id: "northstar-free-ai",
       clientId: "northstar-dental",
       blockType: "free-ai",
@@ -158,6 +167,15 @@ export const initialDatabase: PortalDatabase = {
       id: "verde-linkedin-ads",
       clientId: "verde-studio",
       blockType: "linkedin-ads",
+      enabled: false,
+      status: "locked",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
+      id: "verde-hubspot-crm",
+      clientId: "verde-studio",
+      blockType: "hubspot-crm",
       enabled: false,
       status: "locked",
       createdAt: now,

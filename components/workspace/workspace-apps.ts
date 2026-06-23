@@ -60,5 +60,15 @@ export const workspaceApps: WorkspaceAppDefinition[] = [
     accent: "#0a66c2",
     defaultPosition: { x: 420, y: 135 },
     defaultSize: { width: 960, height: 660 }
+  },
+  {
+    id: "hubspot-crm",
+    blockId: "hubspot-crm",
+    title: "HubSpot CRM Manager",
+    description: "Contacts, deals, pipeline value, lead sources, tasks, and CRM activity.",
+    paid: false,
+    accent: "#ff5c35",
+    defaultPosition: { x: 460, y: 120 },
+    defaultSize: { width: 1000, height: 680 }
   }
 ];

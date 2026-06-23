@@ -8,7 +8,8 @@ export type AppAccessId =
   | "google_ads"
   | "meta_ads"
   | "tiktok_ads"
-  | "linkedin_ads";
+  | "linkedin_ads"
+  | "hubspot_crm";
 
 export type AppAccessMode = "full" | "trial" | "disabled" | "locked";
 
@@ -38,7 +39,8 @@ export const appAccessDefinitions: Array<{
   { appId: "google_ads", blockId: "google-ads", name: "Google Ads Manager", description: "Google campaign reporting and recommendations.", trialEnabled: false },
   { appId: "meta_ads", blockId: "meta-ads", name: "Meta/Facebook Ads Manager", description: "Facebook and Instagram ad reporting.", trialEnabled: false },
   { appId: "tiktok_ads", blockId: "tiktok-ads", name: "TikTok Ads Manager", description: "TikTok ad performance and reporting.", trialEnabled: false },
-  { appId: "linkedin_ads", blockId: "linkedin-ads", name: "LinkedIn Ads Manager", description: "LinkedIn B2B campaign reporting.", trialEnabled: false }
+  { appId: "linkedin_ads", blockId: "linkedin-ads", name: "LinkedIn Ads Manager", description: "LinkedIn B2B campaign reporting.", trialEnabled: false },
+  { appId: "hubspot_crm", blockId: "hubspot-crm", name: "HubSpot CRM Manager", description: "CRM leads, contacts, deals, pipeline value, and follow-up tasks.", trialEnabled: false }
 ];
 
 const globalAccessStore = globalThis as typeof globalThis & {
