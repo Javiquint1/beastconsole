@@ -38,6 +38,13 @@ export const marketingBlocks: MarketingBlock[] = [
     description: "Track contacts, companies, deals, pipeline value, lead source, tasks, and CRM activity."
   },
   {
+    id: "salesforce-crm",
+    name: "Salesforce CRM Manager",
+    category: "CRM",
+    paid: true,
+    description: "Track enterprise leads, accounts, opportunities, sales stages, revenue forecast, and sales activity."
+  },
+  {
     id: "email",
     name: "Email Campaign Builder",
     category: "Email",
@@ -99,6 +106,13 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
       title: "HubSpot CRM Manager",
       description: "View contacts, deals, pipeline value, lead sources, and CRM follow-up tasks.",
       status: getBlockStatus(client, "hubspot-crm"),
+      route: "/dashboard"
+    },
+    {
+      id: "salesforce-crm",
+      title: "Salesforce CRM Manager",
+      description: "View leads, accounts, opportunities, revenue forecast, sales stages, and follow-up tasks.",
+      status: getBlockStatus(client, "salesforce-crm"),
       route: "/dashboard"
     },
     {

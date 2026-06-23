@@ -739,6 +739,8 @@ h3 {
 
 .hubspot-crm-app{background:#f4f6f8;color:var(--ink);gap:12px;min-height:100%;padding:14px}.hubspot-crm-header{align-items:flex-start;background:#ff5c35;color:#fff;display:flex;justify-content:space-between;padding:14px}.hubspot-title{align-items:flex-start;display:flex;gap:10px}.hubspot-crm-header h2{font-size:1.35rem;margin:3px 0}.hubspot-crm-header span{color:rgba(255,255,255,.82);font-size:.72rem}.hubspot-metric-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(135px,1fr))}.hubspot-deal-panel{min-width:0}.hubspot-deal-table{min-width:1100px}.hubspot-bottom-grid{grid-template-columns:1fr .75fr 1fr 1fr .85fr}.hubspot-list{display:grid;gap:8px;margin-top:10px}.hubspot-list article{background:#fff;border:1px solid var(--line);border-radius:7px;display:grid;gap:3px;padding:10px}.hubspot-list article span,.hubspot-list article small{color:var(--muted);font-size:.78rem}.hubspot-list.compact article{padding:9px}.hubspot-source-list{display:grid;gap:8px;margin-top:10px}.hubspot-source-list div{align-items:center;background:#fff;border:1px solid var(--line);border-radius:7px;display:flex;justify-content:space-between;padding:10px}.hubspot-source-list strong{color:#d9421e}.hubspot-api-card{border-style:dashed}.hubspot-api-card p{color:var(--muted);line-height:1.5}.hubspot-api-card button{background:#e8edf2;border:1px solid var(--line);border-radius:5px;color:var(--muted);padding:8px}.hubspot-form{background:#fff;border:1px solid var(--line);box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;gap:10px;left:16px;padding:14px;position:absolute;right:16px;top:70px;z-index:8}.hubspot-form header{align-items:center;display:flex;justify-content:space-between}.hubspot-form header button{background:transparent;border:0;cursor:pointer}.hubspot-form-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}
 
+.salesforce-crm-app{background:#f4f6f8;color:var(--ink);gap:12px;min-height:100%;padding:14px}.salesforce-crm-header{align-items:flex-start;background:#00a1e0;color:#fff;display:flex;justify-content:space-between;padding:14px}.salesforce-title{align-items:flex-start;display:flex;gap:10px}.salesforce-crm-header h2{font-size:1.35rem;margin:3px 0}.salesforce-crm-header span{color:rgba(255,255,255,.84);font-size:.72rem}.salesforce-metric-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(135px,1fr))}.salesforce-opportunity-panel{min-width:0}.salesforce-opportunity-table{min-width:1380px}.salesforce-bottom-grid{grid-template-columns:1fr 1fr .75fr 1fr 1fr .85fr}.salesforce-list{display:grid;gap:8px;margin-top:10px}.salesforce-list article{background:#fff;border:1px solid var(--line);border-radius:7px;display:grid;gap:3px;padding:10px}.salesforce-list article span,.salesforce-list article small{color:var(--muted);font-size:.78rem}.salesforce-list.compact article{padding:9px}.salesforce-source-list{display:grid;gap:8px;margin-top:10px}.salesforce-source-list div{align-items:center;background:#fff;border:1px solid var(--line);border-radius:7px;display:flex;gap:10px;justify-content:space-between;padding:10px}.salesforce-source-list span{display:grid;gap:2px}.salesforce-source-list small{color:var(--muted);font-size:.72rem}.salesforce-source-list strong{color:#0077aa;text-align:right}.salesforce-api-card{border-style:dashed}.salesforce-api-card p{color:var(--muted);line-height:1.5}.salesforce-api-card button{align-items:center;background:#e8edf2;border:1px solid var(--line);border-radius:5px;color:var(--muted);display:inline-flex;gap:6px;padding:8px}.salesforce-form{background:#fff;border:1px solid var(--line);box-shadow:0 16px 38px rgba(8,35,66,.24);display:grid;gap:10px;left:16px;padding:14px;position:absolute;right:16px;top:70px;z-index:8}.salesforce-form header{align-items:center;display:flex;justify-content:space-between}.salesforce-form header button{background:transparent;border:0;cursor:pointer}.salesforce-form-grid{display:grid;gap:8px;grid-template-columns:repeat(4,minmax(0,1fr))}
+
 .table-wrap.embedded {
   box-shadow: none;
 }
@@ -1134,14 +1136,18 @@ h3 {
   .linkedin-form-grid,
   .hubspot-metric-grid,
   .hubspot-bottom-grid,
-  .hubspot-form-grid {
+  .hubspot-form-grid,
+  .salesforce-metric-grid,
+  .salesforce-bottom-grid,
+  .salesforce-form-grid {
     grid-template-columns: 1fr;
   }
 
   .meta-ads-header,
   .tiktok-ads-header,
   .linkedin-ads-header,
-  .hubspot-crm-header {
+  .hubspot-crm-header,
+  .salesforce-crm-header {
     gap: 10px;
     flex-direction: column;
   }

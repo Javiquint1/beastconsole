@@ -2,7 +2,7 @@ import { initialDatabase } from "./database-seed";
 import type { PortalDatabase } from "./database-schema";
 import type { BlockId, ClientAccount } from "./types";
 
-const allBlockIds: BlockId[] = ["google-ads", "meta-ads", "tiktok-ads", "linkedin-ads", "hubspot-crm", "email", "free-ai"];
+const allBlockIds: BlockId[] = ["google-ads", "meta-ads", "tiktok-ads", "linkedin-ads", "hubspot-crm", "salesforce-crm", "email", "free-ai"];
 
 export function buildClientAccounts(database: PortalDatabase): ClientAccount[] {
   const clientAccounts = database.clients.map((client) => {
@@ -34,7 +34,7 @@ export function buildClientAccounts(database: PortalDatabase): ClientAccount[] {
       paymentStatus: "paid" as const,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      enabledBlocks: ["google-ads", "meta-ads", "tiktok-ads", "linkedin-ads", "hubspot-crm", "email", "free-ai"] as BlockId[],
+      enabledBlocks: ["google-ads", "meta-ads", "tiktok-ads", "linkedin-ads", "hubspot-crm", "salesforce-crm", "email", "free-ai"] as BlockId[],
       monthlyBudget: 0,
       leadGoal: 0
     }));
@@ -97,7 +97,8 @@ export function createDatabaseFromClientAccounts(
             { appId: "meta_ads" as const, blockId: "meta-ads" as const, trialEnabled: false },
             { appId: "tiktok_ads" as const, blockId: "tiktok-ads" as const, trialEnabled: false },
             { appId: "linkedin_ads" as const, blockId: "linkedin-ads" as const, trialEnabled: false },
-            { appId: "hubspot_crm" as const, blockId: "hubspot-crm" as const, trialEnabled: false }
+            { appId: "hubspot_crm" as const, blockId: "hubspot-crm" as const, trialEnabled: false },
+            { appId: "salesforce_crm" as const, blockId: "salesforce-crm" as const, trialEnabled: false }
           ].map((app) => ({
             id: `${client.id}-${app.appId}`,
             clientId: client.id,

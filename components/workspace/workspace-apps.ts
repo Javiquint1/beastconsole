@@ -70,5 +70,15 @@ export const workspaceApps: WorkspaceAppDefinition[] = [
     accent: "#ff5c35",
     defaultPosition: { x: 460, y: 120 },
     defaultSize: { width: 1000, height: 680 }
+  },
+  {
+    id: "salesforce-crm",
+    blockId: "salesforce-crm",
+    title: "Salesforce CRM Manager",
+    description: "Enterprise leads, opportunities, pipeline value, forecast, and revenue activity.",
+    paid: false,
+    accent: "#00a1e0",
+    defaultPosition: { x: 500, y: 140 },
+    defaultSize: { width: 1020, height: 690 }
   }
 ];

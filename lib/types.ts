@@ -13,7 +13,7 @@ export type PaymentStatus =
   | "canceled"
   | "incomplete_expired";
 
-export type BlockId = "google-ads" | "meta-ads" | "tiktok-ads" | "linkedin-ads" | "hubspot-crm" | "email" | "free-ai";
+export type BlockId = "google-ads" | "meta-ads" | "tiktok-ads" | "linkedin-ads" | "hubspot-crm" | "salesforce-crm" | "email" | "free-ai";
 
 export type DashboardBlockStatus = "active" | "locked" | "coming-soon";
 
