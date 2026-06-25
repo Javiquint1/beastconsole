@@ -80,5 +80,15 @@ export const workspaceApps: WorkspaceAppDefinition[] = [
     accent: "#00a1e0",
     defaultPosition: { x: 500, y: 140 },
     defaultSize: { width: 1020, height: 690 }
+  },
+  {
+    id: "semrush-seo",
+    blockId: "semrush-seo",
+    title: "Semrush SEO Manager",
+    description: "SEO visibility, rankings, backlinks, audits, keyword gaps, and competitor research.",
+    paid: false,
+    accent: "#ff642d",
+    defaultPosition: { x: 540, y: 112 },
+    defaultSize: { width: 1080, height: 720 }
   }
 ];

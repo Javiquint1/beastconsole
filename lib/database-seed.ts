@@ -128,6 +128,15 @@ export const initialDatabase: PortalDatabase = {
       updatedAt: now
     },
     {
+      id: "northstar-semrush-seo",
+      clientId: "northstar-dental",
+      blockType: "semrush-seo",
+      enabled: true,
+      status: "active",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
       id: "northstar-free-ai",
       clientId: "northstar-dental",
       blockType: "free-ai",
@@ -194,6 +203,15 @@ export const initialDatabase: PortalDatabase = {
       id: "verde-salesforce-crm",
       clientId: "verde-studio",
       blockType: "salesforce-crm",
+      enabled: false,
+      status: "locked",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
+      id: "verde-semrush-seo",
+      clientId: "verde-studio",
+      blockType: "semrush-seo",
       enabled: false,
       status: "locked",
       createdAt: now,

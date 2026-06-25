@@ -12,6 +12,7 @@ import { TikTokAdsManagerApp } from "@/components/apps/tiktok-ads/TikTokAdsManag
 import { LinkedInAdsManagerApp } from "@/components/apps/linkedin-ads/LinkedInAdsManagerApp";
 import { HubSpotCrmManagerApp } from "@/components/apps/hubspot-crm/HubSpotCrmManagerApp";
 import { SalesforceCrmManagerApp } from "@/components/apps/salesforce-crm/SalesforceCrmManagerApp";
+import { SemrushSeoManagerApp } from "@/components/apps/semrush-seo/SemrushSeoManagerApp";
 import { AppWindow } from "./AppWindow";
 import { AppLauncher } from "./AppLauncher";
 import { workspaceApps } from "./workspace-apps";
@@ -189,6 +190,7 @@ function renderWindowContent(
     app.id === "linkedin-ads" ? <LinkedInAdsManagerApp client={client} /> :
     app.id === "hubspot-crm" ? <HubSpotCrmManagerApp client={client} /> :
     app.id === "salesforce-crm" ? <SalesforceCrmManagerApp client={client} /> :
+    app.id === "semrush-seo" ? <SemrushSeoManagerApp client={client} /> :
     <GoogleAdsManagerApp client={client} />;
 
   return (

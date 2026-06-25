@@ -45,6 +45,13 @@ export const marketingBlocks: MarketingBlock[] = [
     description: "Track enterprise leads, accounts, opportunities, sales stages, revenue forecast, and sales activity."
   },
   {
+    id: "semrush-seo",
+    name: "Semrush SEO Manager",
+    category: "SEO",
+    paid: true,
+    description: "Track keyword rankings, organic visibility, backlinks, site health, keyword gaps, and competitor research."
+  },
+  {
     id: "email",
     name: "Email Campaign Builder",
     category: "Email",
@@ -116,6 +123,13 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
       route: "/dashboard"
     },
     {
+      id: "semrush-seo",
+      title: "Semrush SEO Manager",
+      description: "View SEO visibility, keyword movement, backlinks, site audit issues, and competitor research.",
+      status: getBlockStatus(client, "semrush-seo"),
+      route: "/dashboard"
+    },
+    {
       id: "free-ai",
       title: "Free AI",
       description: "Generate quick campaign ideas and content angles.",
@@ -125,13 +139,6 @@ export function getClientDashboardBlocks(client: ClientAccount): DashboardBlock[
   ];
 
   const futureBlocks: DashboardBlock[] = [
-    {
-      id: "seo-reports",
-      title: "SEO Reports",
-      description: "Organic visibility and ranking reports.",
-      status: "coming-soon",
-      route: "/dashboard/seo-reports"
-    },
     {
       id: "social-planner",
       title: "Social Planner",

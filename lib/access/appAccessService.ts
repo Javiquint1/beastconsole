@@ -10,7 +10,8 @@ export type AppAccessId =
   | "tiktok_ads"
   | "linkedin_ads"
   | "hubspot_crm"
-  | "salesforce_crm";
+  | "salesforce_crm"
+  | "semrush_seo";
 
 export type AppAccessMode = "full" | "trial" | "disabled" | "locked";
 
@@ -42,7 +43,8 @@ export const appAccessDefinitions: Array<{
   { appId: "tiktok_ads", blockId: "tiktok-ads", name: "TikTok Ads Manager", description: "TikTok ad performance and reporting.", trialEnabled: false },
   { appId: "linkedin_ads", blockId: "linkedin-ads", name: "LinkedIn Ads Manager", description: "LinkedIn B2B campaign reporting.", trialEnabled: false },
   { appId: "hubspot_crm", blockId: "hubspot-crm", name: "HubSpot CRM Manager", description: "CRM leads, contacts, deals, pipeline value, and follow-up tasks.", trialEnabled: false },
-  { appId: "salesforce_crm", blockId: "salesforce-crm", name: "Salesforce CRM Manager", description: "Enterprise sales pipeline, opportunities, revenue forecast, and sales activity.", trialEnabled: false }
+  { appId: "salesforce_crm", blockId: "salesforce-crm", name: "Salesforce CRM Manager", description: "Enterprise sales pipeline, opportunities, revenue forecast, and sales activity.", trialEnabled: false },
+  { appId: "semrush_seo", blockId: "semrush-seo", name: "Semrush SEO Manager", description: "SEO visibility, rankings, backlinks, site audit, keyword gaps, and competitor research.", trialEnabled: false }
 ];
 
 const globalAccessStore = globalThis as typeof globalThis & {

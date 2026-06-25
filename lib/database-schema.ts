@@ -57,7 +57,7 @@ export type GoogleAdsReportRecord = {
 export type ClientAppAccessRecord = {
   id: string;
   clientId: string;
-  appId: "ai_helper" | "email" | "google_ads" | "meta_ads" | "tiktok_ads" | "linkedin_ads" | "hubspot_crm" | "salesforce_crm";
+  appId: "ai_helper" | "email" | "google_ads" | "meta_ads" | "tiktok_ads" | "linkedin_ads" | "hubspot_crm" | "salesforce_crm" | "semrush_seo";
   enabled: boolean;
   trialEnabled: boolean;
   createdAt: string;
