@@ -2,6 +2,8 @@ import { getSql } from "@/lib/db/client";
 import { demoHubSpotActivities, demoHubSpotCompanies, demoHubSpotContacts, demoHubSpotDeals, demoHubSpotTasks } from "./mock-data";
 import type { HubSpotActivity, HubSpotCompany, HubSpotContact, HubSpotDeal, HubSpotSummary, HubSpotTask } from "./types";
 
+let schemaReady: Promise<void> | null = null;
+
 export async function getHubSpotCrmDashboard(clientId: string) {
   const [clientContacts, clientCompanies, clientDeals, clientTasks, clientActivities] = await Promise.all([
     getHubSpotContacts(clientId),
@@ -28,6 +30,7 @@ export async function getHubSpotCrmDashboard(clientId: string) {
 }
 
 export async function getHubSpotContacts(clientId: string) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const rows = await sql`
     select
@@ -51,6 +54,7 @@ export async function getHubSpotContacts(clientId: string) {
 }
 
 export async function getHubSpotCompanies(clientId: string) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const rows = await sql`
     select
@@ -70,6 +74,7 @@ export async function getHubSpotCompanies(clientId: string) {
 }
 
 export async function getHubSpotDeals(clientId: string) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const rows = await sql`
     select
@@ -92,6 +97,7 @@ export async function getHubSpotDeals(clientId: string) {
 }
 
 export async function getHubSpotTasks(clientId: string) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const rows = await sql`
     select
@@ -113,6 +119,7 @@ export async function getHubSpotTasks(clientId: string) {
 }
 
 export async function getHubSpotActivities(clientId: string) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const rows = await sql`
     select
@@ -129,6 +136,7 @@ export async function getHubSpotActivities(clientId: string) {
 }
 
 export async function createHubSpotContact(clientId: string, data: Partial<HubSpotContact>) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const now = new Date().toISOString();
   const id = `hubspot-contact-${Date.now()}`;
@@ -181,6 +189,7 @@ export async function createHubSpotContact(clientId: string, data: Partial<HubSp
 }
 
 export async function createHubSpotDeal(clientId: string, data: Partial<HubSpotDeal>) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const now = new Date().toISOString();
   const id = `hubspot-deal-${Date.now()}`;
@@ -230,6 +239,7 @@ export async function createHubSpotDeal(clientId: string, data: Partial<HubSpotD
 }
 
 export async function createHubSpotTask(clientId: string, data: Partial<HubSpotTask>) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const now = new Date().toISOString();
   const id = `hubspot-task-${Date.now()}`;
@@ -276,6 +286,7 @@ export async function createHubSpotTask(clientId: string, data: Partial<HubSpotT
 }
 
 async function createActivity(clientId: string, type: HubSpotActivity["type"], description: string) {
+  await ensureHubSpotSchema();
   const sql = getSql();
   const id = `hubspot-activity-${Date.now()}`;
   const rows = await sql`
@@ -301,6 +312,91 @@ async function createActivity(clientId: string, type: HubSpotActivity["type"], d
       occurred_at
   `;
   return mapActivity(rows[0]);
+}
+
+async function ensureHubSpotSchema() {
+  if (!schemaReady) schemaReady = createHubSpotSchema();
+  return schemaReady;
+}
+
+async function createHubSpotSchema() {
+  const sql = getSql();
+
+  await sql`
+    create table if not exists hubspot_companies (
+      id text primary key,
+      client_id text not null,
+      name text not null,
+      domain text not null default '',
+      industry text not null default '',
+      city text not null default '',
+      created_at timestamptz not null default now(),
+      updated_at timestamptz not null default now()
+    )
+  `;
+  await sql`create index if not exists hubspot_companies_client_id_idx on hubspot_companies (client_id)`;
+
+  await sql`
+    create table if not exists hubspot_contacts (
+      id text primary key,
+      client_id text not null,
+      first_name text not null,
+      last_name text not null,
+      email text not null default '',
+      phone text not null default '',
+      company_id text not null default '',
+      lifecycle_stage text not null default 'Lead',
+      lead_source text not null default 'Manual Entry',
+      last_activity_at timestamptz not null default now(),
+      created_at timestamptz not null default now(),
+      updated_at timestamptz not null default now()
+    )
+  `;
+  await sql`create index if not exists hubspot_contacts_client_id_idx on hubspot_contacts (client_id)`;
+
+  await sql`
+    create table if not exists hubspot_deals (
+      id text primary key,
+      client_id text not null,
+      deal_name text not null,
+      company_id text not null default '',
+      contact_id text not null default '',
+      amount numeric(12, 2) not null default 0,
+      pipeline_stage text not null default 'New Lead',
+      lead_source text not null default 'Manual Entry',
+      close_date date not null default current_date,
+      created_at timestamptz not null default now(),
+      updated_at timestamptz not null default now()
+    )
+  `;
+  await sql`create index if not exists hubspot_deals_client_id_idx on hubspot_deals (client_id)`;
+
+  await sql`
+    create table if not exists hubspot_tasks (
+      id text primary key,
+      client_id text not null,
+      title text not null,
+      owner text not null default 'Admin',
+      due_date date not null default current_date,
+      status text not null default 'Open',
+      related_contact_id text,
+      related_deal_id text,
+      created_at timestamptz not null default now(),
+      updated_at timestamptz not null default now()
+    )
+  `;
+  await sql`create index if not exists hubspot_tasks_client_id_idx on hubspot_tasks (client_id)`;
+
+  await sql`
+    create table if not exists hubspot_activities (
+      id text primary key,
+      client_id text not null,
+      type text not null,
+      description text not null,
+      occurred_at timestamptz not null default now()
+    )
+  `;
+  await sql`create index if not exists hubspot_activities_client_id_occurred_at_idx on hubspot_activities (client_id, occurred_at desc)`;
 }
 
 function getDemoHubSpotCrmData(clientId: string) {

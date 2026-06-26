@@ -22,6 +22,7 @@ const emptyTask: Pick<HubSpotTask, "title" | "owner" | "dueDate" | "status"> = {
 export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
   const [data, setData] = useState<HubSpotDashboard | null>(null);
   const [notice, setNotice] = useState("");
+  const [loading, setLoading] = useState(true);
   const [panel, setPanel] = useState<"contact" | "deal" | "task" | null>(null);
   const [contact, setContact] = useState(emptyContact);
   const [deal, setDeal] = useState(emptyDeal);
@@ -32,9 +33,21 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
   useEffect(() => { void load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [client.id]);
 
   async function load() {
-    const response = await fetch("/api/hubspot-crm/summary", { headers });
-    if (!response.ok) return setNotice("HubSpot CRM dashboard could not be loaded.");
-    setData(await response.json() as HubSpotDashboard);
+    setLoading(true);
+    try {
+      const response = await fetch("/api/hubspot-crm/summary", { headers });
+      if (!response.ok) {
+        setNotice("HubSpot CRM dashboard could not be loaded.");
+        setData(null);
+        return;
+      }
+      setData(await response.json() as HubSpotDashboard);
+    } catch {
+      setNotice("HubSpot CRM dashboard could not be loaded.");
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function addContact(event: FormEvent) {
@@ -58,7 +71,8 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
     if (response.ok) { setTask(emptyTask); setPanel(null); await load(); }
   }
 
-  if (!data) return <div className="empty-state">Loading HubSpot CRM pipeline...</div>;
+  if (loading) return <div className="empty-state">Loading HubSpot CRM pipeline...</div>;
+  if (!data) return <div className="empty-state">{notice || "HubSpot CRM dashboard could not be loaded."}</div>;
 
   const companyName = (id: string) => data.companies.find((company) => company.id === id)?.name || "Unassigned";
   const contactName = (id: string) => {
