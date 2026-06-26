@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "db:migrate:hubspot": "node scripts/apply-hubspot-migration.mjs",
     "lint": "next lint"
   },
   "dependencies": {

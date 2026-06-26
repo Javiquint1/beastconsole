@@ -4,7 +4,7 @@ import { getHubSpotCrmDashboard } from "@/lib/hubspot-crm/hubspotCrmService";
 
 export async function GET(request: NextRequest) {
   try {
-    return NextResponse.json(getHubSpotCrmDashboard(requireHubSpotClientId(request)));
+    return NextResponse.json(await getHubSpotCrmDashboard(requireHubSpotClientId(request)));
   } catch (error) {
     return hubSpotApiError(error);
   }

@@ -4,7 +4,7 @@ import { createHubSpotContact, getHubSpotContacts } from "@/lib/hubspot-crm/hubs
 
 export async function GET(request: NextRequest) {
   try {
-    return NextResponse.json({ contacts: getHubSpotContacts(requireHubSpotClientId(request)) });
+    return NextResponse.json({ contacts: await getHubSpotContacts(requireHubSpotClientId(request)) });
   } catch (error) {
     return hubSpotApiError(error);
   }
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     requireHubSpotAdmin(request);
-    return NextResponse.json({ contact: createHubSpotContact(requireHubSpotClientId(request), await request.json()) });
+    return NextResponse.json({ contact: await createHubSpotContact(requireHubSpotClientId(request), await request.json()) });
   } catch (error) {
     return hubSpotApiError(error);
   }

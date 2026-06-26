@@ -4,7 +4,7 @@ import { getHubSpotCompanies } from "@/lib/hubspot-crm/hubspotCrmService";
 
 export async function GET(request: NextRequest) {
   try {
-    return NextResponse.json({ companies: getHubSpotCompanies(requireHubSpotClientId(request)) });
+    return NextResponse.json({ companies: await getHubSpotCompanies(requireHubSpotClientId(request)) });
   } catch (error) {
     return hubSpotApiError(error);
   }
