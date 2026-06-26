@@ -15,6 +15,13 @@ type HubSpotDashboard = {
   demoMode: boolean;
 };
 
+type HubSpotConnectionStatus = {
+  connected: boolean;
+  hubId: string | null;
+  tokenExpiresAt: string | null;
+  updatedAt: string | null;
+};
+
 const emptyContact: Pick<HubSpotContact, "firstName" | "lastName" | "email" | "phone" | "companyId" | "lifecycleStage" | "leadSource"> = { firstName: "", lastName: "", email: "", phone: "", companyId: "", lifecycleStage: "Lead", leadSource: "Google Ads" };
 const emptyDeal: Pick<HubSpotDeal, "dealName" | "companyId" | "contactId" | "amount" | "pipelineStage" | "leadSource" | "closeDate"> = { dealName: "", companyId: "", contactId: "", amount: 0, pipelineStage: "New Lead", leadSource: "Google Ads", closeDate: "" };
 const emptyTask: Pick<HubSpotTask, "title" | "owner" | "dueDate" | "status"> = { title: "", owner: "", dueDate: "", status: "Open" };
@@ -23,6 +30,7 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
   const [data, setData] = useState<HubSpotDashboard | null>(null);
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
+  const [connection, setConnection] = useState<HubSpotConnectionStatus | null>(null);
   const [panel, setPanel] = useState<"contact" | "deal" | "task" | null>(null);
   const [contact, setContact] = useState(emptyContact);
   const [deal, setDeal] = useState(emptyDeal);
@@ -30,7 +38,7 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
   const admin = client.role === "admin";
   const headers = useMemo(() => ({ "x-beast-client-id": client.id, "x-beast-role": client.role }), [client.id, client.role]);
 
-  useEffect(() => { void load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [client.id]);
+  useEffect(() => { void load(); void loadConnectionStatus(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [client.id]);
 
   async function load() {
     setLoading(true);
@@ -69,6 +77,15 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
     const response = await fetch("/api/hubspot-crm/tasks", { method: "POST", headers: { ...headers, "Content-Type": "application/json" }, body: JSON.stringify(task) });
     setNotice(response.ok ? "HubSpot task added." : "Task could not be added.");
     if (response.ok) { setTask(emptyTask); setPanel(null); await load(); }
+  }
+
+  async function loadConnectionStatus() {
+    const response = await fetch("/api/hubspot/status", { headers });
+    if (response.ok) setConnection(await response.json() as HubSpotConnectionStatus);
+  }
+
+  function connectHubSpot() {
+    window.location.href = `/api/hubspot/connect?clientId=${encodeURIComponent(client.id)}`;
   }
 
   if (loading) return <div className="empty-state">Loading HubSpot CRM pipeline...</div>;
@@ -159,10 +176,10 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
           </div>
         </section>
         <section className="mini-panel hubspot-api-card">
-          <p className="eyebrow">Coming later</p>
+          <p className="eyebrow">{connection?.connected ? "Connected" : "OAuth connection"}</p>
           <h3>Connect HubSpot CRM API</h3>
-          <p>Future version will connect HubSpot OAuth and CRM APIs for contacts, companies, deals, properties, associations, tasks, and recent activity sync.</p>
-          <button disabled type="button">Connect HubSpot API</button>
+          <p>{connection?.connected ? `HubSpot account ${connection.hubId || ""} is connected for this client.` : "Connect a HubSpot account so this client can authorize CRM API access."}</p>
+          <button onClick={connectHubSpot} type="button">{connection?.connected ? "Reconnect HubSpot API" : "Connect HubSpot API"}</button>
         </section>
       </div>
 

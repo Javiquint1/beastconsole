@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { neon } from "@neondatabase/serverless";
 
@@ -29,10 +29,15 @@ if (!process.env.DATABASE_URL) {
 }
 
 const sql = neon(process.env.DATABASE_URL);
-const migration = await readFile(resolve("migrations/001_hubspot_crm.sql"), "utf8");
+const migrationFiles = (await readdir(resolve("migrations")))
+  .filter((file) => /^\d+_hubspot_.*\.sql$/.test(file))
+  .sort();
 
-for (const statement of splitStatements(migration)) {
-  await sql.query(statement);
+for (const file of migrationFiles) {
+  const migration = await readFile(resolve("migrations", file), "utf8");
+  for (const statement of splitStatements(migration)) {
+    await sql.query(statement);
+  }
 }
 
-console.log("HubSpot CRM migration applied.");
+console.log(`HubSpot migrations applied: ${migrationFiles.join(", ")}`);

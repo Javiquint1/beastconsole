@@ -30,9 +30,9 @@ export function decryptSecret(encryptedValue: string): string {
 }
 
 function getEncryptionKey() {
-  const secret = process.env.META_TOKEN_ENCRYPTION_KEY;
+  const secret = process.env.META_TOKEN_ENCRYPTION_KEY || process.env.TOKEN_ENCRYPTION_KEY;
   if (!secret) {
-    throw new Error("META_TOKEN_ENCRYPTION_KEY is missing.");
+    throw new Error("TOKEN_ENCRYPTION_KEY is missing.");
   }
   return createHash("sha256").update(secret).digest();
 }
