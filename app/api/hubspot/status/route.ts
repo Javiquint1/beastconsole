@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHubSpotConnection } from "@/lib/hubspot/oauth";
+import { hasHubSpotPrivateToken } from "@/lib/hubspot/private-app";
 
 export const runtime = "nodejs";
 
@@ -10,7 +11,8 @@ export async function GET(request: NextRequest) {
 
     const connection = await getHubSpotConnection(clientId);
     return NextResponse.json({
-      connected: Boolean(connection),
+      connected: Boolean(connection) || hasHubSpotPrivateToken(),
+      mode: hasHubSpotPrivateToken() ? "private-app" : connection ? "oauth" : null,
       hubId: connection?.hubId || null,
       tokenExpiresAt: connection?.tokenExpiresAt || null,
       updatedAt: connection?.updatedAt || null

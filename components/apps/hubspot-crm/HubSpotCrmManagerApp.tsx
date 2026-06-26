@@ -17,6 +17,7 @@ type HubSpotDashboard = {
 
 type HubSpotConnectionStatus = {
   connected: boolean;
+  mode?: "private-app" | "oauth" | null;
   hubId: string | null;
   tokenExpiresAt: string | null;
   updatedAt: string | null;
@@ -30,6 +31,7 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
   const [data, setData] = useState<HubSpotDashboard | null>(null);
   const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
   const [connection, setConnection] = useState<HubSpotConnectionStatus | null>(null);
   const [panel, setPanel] = useState<"contact" | "deal" | "task" | null>(null);
   const [contact, setContact] = useState(emptyContact);
@@ -84,8 +86,24 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
     if (response.ok) setConnection(await response.json() as HubSpotConnectionStatus);
   }
 
-  function connectHubSpot() {
-    window.location.href = `/api/hubspot/connect?clientId=${encodeURIComponent(client.id)}`;
+  async function syncHubSpot() {
+    setSyncing(true);
+    setNotice("");
+    try {
+      const response = await fetch("/api/hubspot/sync", { method: "POST", headers });
+      const result = await response.json() as { synced?: { contacts: number; companies: number; deals: number }; error?: string };
+      if (!response.ok) {
+        setNotice(result.error || "HubSpot sync could not be completed.");
+        return;
+      }
+      setNotice(`HubSpot synced: ${result.synced?.contacts || 0} contacts, ${result.synced?.companies || 0} companies, ${result.synced?.deals || 0} deals.`);
+      await load();
+      await loadConnectionStatus();
+    } catch {
+      setNotice("HubSpot sync could not be completed.");
+    } finally {
+      setSyncing(false);
+    }
   }
 
   if (loading) return <div className="empty-state">Loading HubSpot CRM pipeline...</div>;
@@ -176,10 +194,10 @@ export function HubSpotCrmManagerApp({ client }: { client: ClientAccount }) {
           </div>
         </section>
         <section className="mini-panel hubspot-api-card">
-          <p className="eyebrow">{connection?.connected ? "Connected" : "OAuth connection"}</p>
-          <h3>Connect HubSpot CRM API</h3>
-          <p>{connection?.connected ? `HubSpot account ${connection.hubId || ""} is connected for this client.` : "Connect a HubSpot account so this client can authorize CRM API access."}</p>
-          <button onClick={connectHubSpot} type="button">{connection?.connected ? "Reconnect HubSpot API" : "Connect HubSpot API"}</button>
+          <p className="eyebrow">{connection?.connected ? "Private app connected" : "Private app token"}</p>
+          <h3>Sync HubSpot CRM API</h3>
+          <p>{connection?.connected ? "HubSpot private app token is configured. Sync contacts, companies, and deals into this dashboard." : "Add HUBSPOT_ACCESS_TOKEN in Vercel to enable HubSpot CRM sync."}</p>
+          <button disabled={!connection?.connected || syncing} onClick={syncHubSpot} type="button">{syncing ? "Syncing HubSpot..." : "Sync HubSpot Data"}</button>
         </section>
       </div>
 

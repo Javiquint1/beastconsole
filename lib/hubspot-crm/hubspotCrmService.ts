@@ -285,6 +285,148 @@ export async function createHubSpotTask(clientId: string, data: Partial<HubSpotT
   return task;
 }
 
+export async function syncHubSpotCrmRecords(clientId: string, data: {
+  companies: HubSpotCompany[];
+  contacts: HubSpotContact[];
+  deals: HubSpotDeal[];
+}) {
+  await ensureHubSpotSchema();
+  const sql = getSql();
+  const now = new Date().toISOString();
+
+  for (const company of data.companies) {
+    await sql`
+      insert into hubspot_companies (
+        id,
+        client_id,
+        name,
+        domain,
+        industry,
+        city,
+        created_at,
+        updated_at
+      )
+      values (
+        ${company.id},
+        ${clientId},
+        ${company.name},
+        ${company.domain},
+        ${company.industry},
+        ${company.city},
+        ${company.createdAt || now},
+        ${company.updatedAt || now}
+      )
+      on conflict (id)
+      do update set
+        client_id = excluded.client_id,
+        name = excluded.name,
+        domain = excluded.domain,
+        industry = excluded.industry,
+        city = excluded.city,
+        updated_at = excluded.updated_at
+    `;
+  }
+
+  for (const contact of data.contacts) {
+    await sql`
+      insert into hubspot_contacts (
+        id,
+        client_id,
+        first_name,
+        last_name,
+        email,
+        phone,
+        company_id,
+        lifecycle_stage,
+        lead_source,
+        last_activity_at,
+        created_at,
+        updated_at
+      )
+      values (
+        ${contact.id},
+        ${clientId},
+        ${contact.firstName},
+        ${contact.lastName},
+        ${contact.email},
+        ${contact.phone},
+        ${contact.companyId},
+        ${contact.lifecycleStage},
+        ${contact.leadSource},
+        ${contact.lastActivityAt || now},
+        ${contact.createdAt || now},
+        ${contact.updatedAt || now}
+      )
+      on conflict (id)
+      do update set
+        client_id = excluded.client_id,
+        first_name = excluded.first_name,
+        last_name = excluded.last_name,
+        email = excluded.email,
+        phone = excluded.phone,
+        company_id = excluded.company_id,
+        lifecycle_stage = excluded.lifecycle_stage,
+        lead_source = excluded.lead_source,
+        last_activity_at = excluded.last_activity_at,
+        updated_at = excluded.updated_at
+    `;
+  }
+
+  for (const deal of data.deals) {
+    await sql`
+      insert into hubspot_deals (
+        id,
+        client_id,
+        deal_name,
+        company_id,
+        contact_id,
+        amount,
+        pipeline_stage,
+        lead_source,
+        close_date,
+        created_at,
+        updated_at
+      )
+      values (
+        ${deal.id},
+        ${clientId},
+        ${deal.dealName},
+        ${deal.companyId},
+        ${deal.contactId},
+        ${deal.amount},
+        ${deal.pipelineStage},
+        ${deal.leadSource},
+        ${deal.closeDate || now.slice(0, 10)},
+        ${deal.createdAt || now},
+        ${deal.updatedAt || now}
+      )
+      on conflict (id)
+      do update set
+        client_id = excluded.client_id,
+        deal_name = excluded.deal_name,
+        company_id = excluded.company_id,
+        contact_id = excluded.contact_id,
+        amount = excluded.amount,
+        pipeline_stage = excluded.pipeline_stage,
+        lead_source = excluded.lead_source,
+        close_date = excluded.close_date,
+        updated_at = excluded.updated_at
+    `;
+  }
+
+  await createActivity(
+    clientId,
+    "Note",
+    `Synced ${data.contacts.length} contacts, ${data.companies.length} companies, and ${data.deals.length} deals from HubSpot.`
+  );
+
+  return {
+    contacts: data.contacts.length,
+    companies: data.companies.length,
+    deals: data.deals.length
+  };
+}
+
 async function createActivity(clientId: string, type: HubSpotActivity["type"], description: string) {
   await ensureHubSpotSchema();
   const sql = getSql();
